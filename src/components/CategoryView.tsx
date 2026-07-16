@@ -158,6 +158,23 @@ export default function CategoryView({ category, setView, onBack }: CategoryView
               </span>
             </motion.div>
 
+            {/* Gujarati Letters */}
+            <motion.div
+              whileHover={{ y: -8, scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => setView('gujarati-letters')}
+              className="bg-white dark:bg-slate-800 rounded-3xl border-4 border-slate-100 dark:border-slate-700/50 p-6 flex flex-col items-center cursor-pointer shadow-[0_8px_20px_-4px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all"
+            >
+              <div className="text-6xl mb-4 filter drop-shadow">🔤</div>
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2 font-gujarati">ગુજરાતી અક્ષરો</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm text-center mb-4 leading-relaxed font-gujarati">
+                વ્યંજન અને સ્વર અક્ષરો તેમજ તેમનું અંગ્રેજી ભાષાંતર અને સુંદર અવાજ શીખો.
+              </p>
+              <span className="mt-auto flex items-center gap-1.5 text-blue-500 font-bold text-sm">
+                શીખવા માટે ક્લિક કરો <ArrowRight size={16} />
+              </span>
+            </motion.div>
+
             {/* Gujarati Words (Future Section) */}
             <motion.div
               whileHover={{ y: -2 }}

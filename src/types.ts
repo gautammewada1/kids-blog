@@ -40,5 +40,5 @@ export interface GujaratiNumberItem {
   color: string;
 }
 
-export type ViewType = 'home' | 'english-alphabet' | 'english-words' | 'english-numbers' | 'gujarati-alphabet' | 'gujarati-numbers' | 'gujarati-barakhadi' | 'future-room' | 'category-english' | 'category-gujarati' | 'quiz';
+export type ViewType = 'home' | 'english-alphabet' | 'english-words' | 'english-numbers' | 'gujarati-alphabet' | 'gujarati-numbers' | 'gujarati-barakhadi' | 'gujarati-letters' | 'future-room' | 'category-english' | 'category-gujarati' | 'quiz';
 export type CategoryType = 'english' | 'gujarati';
