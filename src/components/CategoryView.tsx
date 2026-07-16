@@ -51,7 +51,7 @@ export default function CategoryView({ category, setView, onBack }: CategoryView
       </div>
 
       {/* List of sub-learning sections */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-4xl px-4">
         {isEnglish ? (
           <>
             {/* English Alphabet */}
@@ -87,6 +87,23 @@ export default function CategoryView({ category, setView, onBack }: CategoryView
                 Let's Learn <ArrowRight size={16} />
               </span>
             </motion.div>
+
+            {/* English Numbers */}
+            <motion.div
+              whileHover={{ y: -8, scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => setView('english-numbers')}
+              className="bg-white dark:bg-slate-800 rounded-3xl border-4 border-slate-100 dark:border-slate-700/50 p-6 flex flex-col items-center cursor-pointer shadow-[0_8px_20px_-4px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all"
+            >
+              <div className="text-6xl mb-4 filter drop-shadow">🔢</div>
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">English Numbers</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm text-center mb-4 leading-relaxed">
+                Learn to count 1 to 20 with gorgeous items and voice pronunciations!
+              </p>
+              <span className="mt-auto flex items-center gap-1.5 text-pink-500 font-bold text-sm">
+                Let's Learn <ArrowRight size={16} />
+              </span>
+            </motion.div>
           </>
         ) : (
           <>
@@ -98,9 +115,26 @@ export default function CategoryView({ category, setView, onBack }: CategoryView
               className="bg-white dark:bg-slate-800 rounded-3xl border-4 border-slate-100 dark:border-slate-700/50 p-6 flex flex-col items-center cursor-pointer shadow-[0_8px_20px_-4px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all"
             >
               <div className="text-6xl mb-4 filter drop-shadow">🗣️</div>
-              <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2 font-gujarati">ગુજરાતી મૂળાક્ષરો (કક્કો)</h3>
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2 font-gujarati">ગુજરાતી મૂળાક્ષરો</h3>
               <p className="text-slate-500 dark:text-slate-400 text-sm text-center mb-4 leading-relaxed">
                 ક થી જ્ઞ સુધીના સ્વર અને વ્યંજન સચિત્ર ઉચ્ચારણ અને સ્પષ્ટ ઓડિયો સાથે શીખો.
+              </p>
+              <span className="mt-auto flex items-center gap-1.5 text-blue-500 font-bold text-sm">
+                શીખવા માટે ક્લિક કરો <ArrowRight size={16} />
+              </span>
+            </motion.div>
+
+            {/* Gujarati Numbers */}
+            <motion.div
+              whileHover={{ y: -8, scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => setView('gujarati-numbers')}
+              className="bg-white dark:bg-slate-800 rounded-3xl border-4 border-slate-100 dark:border-slate-700/50 p-6 flex flex-col items-center cursor-pointer shadow-[0_8px_20px_-4px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all"
+            >
+              <div className="text-6xl mb-4 filter drop-shadow">૧️⃣</div>
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2 font-gujarati">ગુજરાતી અંકો</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm text-center mb-4 leading-relaxed font-gujarati">
+                ૧ થી ૨૦ સુધીના અંકો સચિત્ર ગણતરી અને ઓડિયો ઉચ્ચાર સાથે શીખો.
               </p>
               <span className="mt-auto flex items-center gap-1.5 text-blue-500 font-bold text-sm">
                 શીખવા માટે ક્લિક કરો <ArrowRight size={16} />

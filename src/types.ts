@@ -24,5 +24,21 @@ export interface GujaratiLetter {
   color: string;
 }
 
-export type ViewType = 'home' | 'english-alphabet' | 'english-words' | 'gujarati-alphabet' | 'future-room' | 'category-english' | 'category-gujarati' | 'quiz';
+export interface EnglishNumberItem {
+  number: number;
+  word: string;
+  emoji: string;
+  color: string;
+}
+
+export interface GujaratiNumberItem {
+  number: number;
+  gujaratiNumeral: string;
+  word: string;
+  englishPhonetic: string;
+  emoji: string;
+  color: string;
+}
+
+export type ViewType = 'home' | 'english-alphabet' | 'english-words' | 'english-numbers' | 'gujarati-alphabet' | 'gujarati-numbers' | 'future-room' | 'category-english' | 'category-gujarati' | 'quiz';
 export type CategoryType = 'english' | 'gujarati';

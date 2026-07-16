@@ -13,7 +13,9 @@ import HomeView from './components/HomeView';
 import CategoryView from './components/CategoryView';
 import AlphabetView from './components/AlphabetView';
 import WordsView from './components/WordsView';
+import EnglishNumbersView from './components/EnglishNumbersView';
 import GujaratiAlphabetView from './components/GujaratiAlphabetView';
+import GujaratiNumbersView from './components/GujaratiNumbersView';
 import FutureScopeView from './components/FutureScopeView';
 import QuizView from './components/QuizView';
 
@@ -108,9 +110,27 @@ export default function App() {
               </motion.div>
             )}
 
+            {view === 'english-numbers' && (
+              <motion.div key="english-numbers" className="w-full">
+                <EnglishNumbersView 
+                  onBack={handleBackToCategory} 
+                  autoSpeak={autoSpeak} 
+                />
+              </motion.div>
+            )}
+
             {view === 'gujarati-alphabet' && (
               <motion.div key="gujarati-alphabet" className="w-full">
                 <GujaratiAlphabetView 
+                  onBack={handleBackToCategory} 
+                  autoSpeak={autoSpeak} 
+                />
+              </motion.div>
+            )}
+
+            {view === 'gujarati-numbers' && (
+              <motion.div key="gujarati-numbers" className="w-full">
+                <GujaratiNumbersView 
                   onBack={handleBackToCategory} 
                   autoSpeak={autoSpeak} 
                 />

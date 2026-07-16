@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { EnglishLetter, EnglishWordItem, GujaratiLetter } from './types';
+import { EnglishLetter, EnglishWordItem, GujaratiLetter, EnglishNumberItem, GujaratiNumberItem } from './types';
 
 export const KID_COLORS = [
   { bg: 'bg-pink-100 dark:bg-pink-950/40', border: 'border-pink-300 dark:border-pink-800', text: 'text-pink-600 dark:text-pink-400', button: 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-200 dark:shadow-none' },
@@ -107,6 +107,52 @@ export const GUJARATI_ALPHABET: GujaratiLetter[] = [
   { letter: 'ળ', englishPhonetic: 'La', word: 'નળ', wordEmoji: '🚰', wordEnglish: 'Water Tap', color: 'color-7' },
   { letter: 'ક્ષ', englishPhonetic: 'Ksha', word: 'ક્ષત્રિય', wordEmoji: '⚔️', wordEnglish: 'Warrior', color: 'color-8' },
   { letter: 'જ્ઞ', englishPhonetic: 'Gnya', word: 'યજ્ઞ', wordEmoji: '🧠', wordEnglish: 'Sage', color: 'color-9' }
+];
+
+export const ENGLISH_NUMBERS: EnglishNumberItem[] = [
+  { number: 1, word: 'One', emoji: '🍎', color: 'color-0' },
+  { number: 2, word: 'Two', emoji: '🎈', color: 'color-1' },
+  { number: 3, word: 'Three', emoji: '🚗', color: 'color-2' },
+  { number: 4, word: 'Four', emoji: '🐱', color: 'color-3' },
+  { number: 5, word: 'Five', emoji: '⭐', color: 'color-4' },
+  { number: 6, word: 'Six', emoji: '🐟', color: 'color-5' },
+  { number: 7, word: 'Seven', emoji: '🌻', color: 'color-6' },
+  { number: 8, word: 'Eight', emoji: '🧸', color: 'color-7' },
+  { number: 9, word: 'Nine', emoji: '🍦', color: 'color-8' },
+  { number: 10, word: 'Ten', emoji: '⚽', color: 'color-9' },
+  { number: 11, word: 'Eleven', emoji: '🦖', color: 'color-10' },
+  { number: 12, word: 'Twelve', emoji: '🧁', color: 'color-11' },
+  { number: 13, word: 'Thirteen', emoji: '🚀', color: 'color-0' },
+  { number: 14, word: 'Fourteen', emoji: '🍩', color: 'color-1' },
+  { number: 15, word: 'Fifteen', emoji: '🦋', color: 'color-2' },
+  { number: 16, word: 'Sixteen', emoji: '🍓', color: 'color-3' },
+  { number: 17, word: 'Seventeen', emoji: '🎨', color: 'color-4' },
+  { number: 18, word: 'Eighteen', emoji: '🦀', color: 'color-5' },
+  { number: 19, word: 'Nineteen', emoji: '🌈', color: 'color-6' },
+  { number: 20, word: 'Twenty', emoji: '🍀', color: 'color-7' }
+];
+
+export const GUJARATI_NUMBERS: GujaratiNumberItem[] = [
+  { number: 1, gujaratiNumeral: '૧', word: 'એક', englishPhonetic: 'Ek', emoji: '🍎', color: 'color-0' },
+  { number: 2, gujaratiNumeral: '૨', word: 'બે', englishPhonetic: 'Be', emoji: '🎈', color: 'color-1' },
+  { number: 3, gujaratiNumeral: '૩', word: 'ત્રણ', englishPhonetic: 'Tran', emoji: '🚗', color: 'color-2' },
+  { number: 4, gujaratiNumeral: '૪', word: 'ચાર', englishPhonetic: 'Chaar', emoji: '🐱', color: 'color-3' },
+  { number: 5, gujaratiNumeral: '૫', word: 'પાંચ', englishPhonetic: 'Paanch', emoji: '⭐', color: 'color-4' },
+  { number: 6, gujaratiNumeral: '૬', word: 'છ', englishPhonetic: 'Chha', emoji: '🐟', color: 'color-5' },
+  { number: 7, gujaratiNumeral: '૭', word: 'સાત', englishPhonetic: 'Saat', emoji: '🌻', color: 'color-6' },
+  { number: 8, gujaratiNumeral: '૮', word: 'આઠ', englishPhonetic: 'Aath', emoji: '🧸', color: 'color-7' },
+  { number: 9, gujaratiNumeral: '૯', word: 'નવ', englishPhonetic: 'Nav', emoji: '🍦', color: 'color-8' },
+  { number: 10, gujaratiNumeral: '૧૦', word: 'દસ', englishPhonetic: 'Das', emoji: '⚽', color: 'color-9' },
+  { number: 11, gujaratiNumeral: '૧૧', word: 'અગિયાર', englishPhonetic: 'Agiyar', emoji: '🦖', color: 'color-10' },
+  { number: 12, gujaratiNumeral: '૧૨', word: 'બાર', englishPhonetic: 'Baar', emoji: '🧁', color: 'color-11' },
+  { number: 13, gujaratiNumeral: '૧૩', word: 'તેર', englishPhonetic: 'Ter', emoji: '🚀', color: 'color-0' },
+  { number: 14, gujaratiNumeral: '૧૪', word: 'ચૌદ', englishPhonetic: 'Chaud', emoji: '🍩', color: 'color-1' },
+  { number: 15, gujaratiNumeral: '૧૫', word: 'પંદર', englishPhonetic: 'Pandar', emoji: '🦋', color: 'color-2' },
+  { number: 16, gujaratiNumeral: '૧૬', word: 'સોળ', englishPhonetic: 'Sol', emoji: '🍓', color: 'color-3' },
+  { number: 17, gujaratiNumeral: '૧૭', word: 'સત્તર', englishPhonetic: 'Sattar', emoji: '🎨', color: 'color-4' },
+  { number: 18, gujaratiNumeral: '૧૮', word: 'અઢાર', englishPhonetic: 'Adhaar', emoji: '🦀', color: 'color-5' },
+  { number: 19, gujaratiNumeral: '૧૯', word: 'ઓગણીસ', englishPhonetic: 'Oganis', emoji: '🌈', color: 'color-6' },
+  { number: 20, gujaratiNumeral: '૨૦', word: 'વીસ', englishPhonetic: 'Vees', emoji: '🍀', color: 'color-7' }
 ];
 
 export const FUTURE_SECTIONS = [
