@@ -1,0 +1,1509 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+export const BLOGGER_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kids Learning Portal</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@500;700;800&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Playful Kid-friendly styles */
+    :root {
+      --font-primary: 'Fredoka', sans-serif;
+      --font-gujarati: 'Baloo Bhai 2', 'Fredoka', sans-serif;
+      
+      --bg-app: #FFFDF6;
+      --bg-card: #FFFFFF;
+      --text-main: #333333;
+      --text-muted: #666666;
+      --border-color: #F0EAD6;
+      --shadow-soft: 0 12px 30px rgba(255, 159, 41, 0.12);
+      
+      /* Color theme palette */
+      --pink: #FF6B8B;
+      --blue: #4D96FF;
+      --green: #6BCB77;
+      --yellow: #FFD93D;
+      --orange: #FF9F29;
+      --purple: #9C27B0;
+    }
+
+    [data-theme="dark"] {
+      --bg-app: #0F172A;
+      --bg-card: #1E293B;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-color: #334155;
+      --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
+      padding-bottom: 40px;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 800px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Header & Navigation bar */
+    header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 10px 0;
+    }
+
+    .brand {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(45deg, var(--pink), var(--orange), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+      cursor: pointer;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background-color: var(--bg-card);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-circle:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .btn-circle:active {
+      transform: scale(0.95);
+    }
+
+    /* Floating Bubbles decorative */
+    .bubbles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 107, 139, 0.04);
+      animation: floatUp 15s infinite linear;
+      bottom: -100px;
+    }
+
+    [data-theme="dark"] .bubble {
+      background: rgba(77, 150, 255, 0.03);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Views */
+    .view {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Home View Styling */
+    .hero-title {
+      font-size: 42px;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    .hero-title span {
+      background: linear-gradient(45deg, var(--pink), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .grid-categories {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    @media (min-width: 600px) {
+      .grid-categories {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Kids Cards */
+    .kid-card {
+      background-color: var(--bg-card);
+      border-radius: 32px;
+      border: 4px solid var(--border-color);
+      padding: 30px 24px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .kid-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .kid-card:active {
+      transform: translateY(-2px) scale(0.98);
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: rgba(255,255,255,0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .card-icon {
+      font-size: 64px;
+      margin-bottom: 5px;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.1));
+      transition: transform 0.3s ease;
+    }
+
+    .kid-card:hover .card-icon {
+      transform: scale(1.15) rotate(-5deg);
+    }
+
+    .card-title {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Subcategories or sections list inside English/Gujarati */
+    .sections-container {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .back-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--pink);
+      align-self: flex-start;
+      margin-bottom: 25px;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    .back-nav:hover {
+      text-decoration: underline;
+    }
+
+    /* Card Carousel Slider Layout */
+    .carousel-container {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .flash-card {
+      width: 100%;
+      background-color: var(--bg-card);
+      border-radius: 40px;
+      border: 8px solid var(--border-color);
+      box-shadow: var(--shadow-soft);
+      padding: 40px 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 380px;
+      position: relative;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .flash-card.animate-next {
+      animation: slideNext 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .flash-card.animate-prev {
+      animation: slidePrev 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideNext {
+      0% { opacity: 0; transform: translateX(50px) rotate(3deg); }
+      100% { opacity: 1; transform: translateX(0) rotate(0); }
+    }
+
+    @keyframes slidePrev {
+      0% { opacity: 0; transform: translateX(-50px) rotate(-3deg); }
+      100% { opacity: 1; transform: translateX(0) rotate(0); }
+    }
+
+    .large-letter {
+      font-size: 130px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
+    }
+
+    .gujarati-letter {
+      font-family: var(--font-gujarati);
+      font-size: 110px;
+    }
+
+    .phonetic {
+      font-size: 18px;
+      color: var(--text-muted);
+      background-color: var(--border-color);
+      padding: 4px 16px;
+      border-radius: 20px;
+      margin-top: -5px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .large-emoji {
+      font-size: 100px;
+      margin: 15px 0;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .word-text {
+      font-size: 38px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .card-footer-info {
+      position: absolute;
+      bottom: 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Carousel controls */
+    .controls-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 440px;
+      gap: 15px;
+    }
+
+    .btn-nav {
+      flex: 1;
+      height: 56px;
+      border-radius: 28px;
+      border: none;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-nav:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .btn-nav:active {
+      transform: translateY(0);
+    }
+
+    .btn-prev {
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      border: 3px solid var(--border-color);
+    }
+
+    .btn-next {
+      background-color: var(--blue);
+      color: white;
+    }
+
+    .btn-speak {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background-color: var(--pink);
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255, 107, 139, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .btn-speak:hover {
+      transform: scale(1.15) rotate(-10deg);
+      box-shadow: 0 12px 25px rgba(255, 107, 139, 0.4);
+    }
+
+    .btn-speak:active {
+      transform: scale(0.9);
+    }
+
+    /* Tabs selector */
+    .tabs-container {
+      display: flex;
+      background-color: rgba(77, 150, 255, 0.05);
+      padding: 6px;
+      border-radius: 24px;
+      border: 3px solid var(--border-color);
+      width: 100%;
+      max-width: 380px;
+      margin-bottom: 25px;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 18px;
+      border: none;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--blue);
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      background-color: var(--blue);
+      color: white;
+      box-shadow: 0 4px 10px rgba(77, 150, 255, 0.2);
+    }
+
+    /* Auto Speak Toggle bar */
+    .sound-toggle-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+      margin-top: 5px;
+    }
+
+    .sound-toggle-bar input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--pink);
+      cursor: pointer;
+    }
+
+    /* Future Scope / Coming soon view */
+    .future-banner {
+      width: 100%;
+      max-width: 600px;
+      background: linear-gradient(135deg, rgba(255, 217, 61, 0.15), rgba(77, 150, 255, 0.15));
+      border: 3px dashed var(--yellow);
+      border-radius: 28px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .future-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    @media (min-width: 480px) {
+      .future-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .future-card {
+      background-color: var(--bg-card);
+      border-radius: 24px;
+      border: 3px solid var(--border-color);
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+    }
+
+    .future-card:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+      border-color: var(--pink);
+    }
+
+    .future-emoji {
+      font-size: 32px;
+      background-color: rgba(0,0,0,0.03);
+      padding: 8px;
+      border-radius: 16px;
+    }
+
+    .future-info {
+      text-align: left;
+    }
+
+    .future-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .future-badge {
+      display: inline-block;
+      font-size: 10px;
+      background-color: var(--border-color);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    /* Color scheme variables helper injection */
+    .color-0 { color: var(--pink); border-color: rgba(255, 107, 139, 0.3); }
+    .color-1 { color: var(--blue); border-color: rgba(77, 150, 255, 0.3); }
+    .color-2 { color: var(--green); border-color: rgba(107, 203, 119, 0.3); }
+    .color-3 { color: #DDA15E; border-color: rgba(221, 161, 94, 0.3); }
+    .color-4 { color: var(--purple); border-color: rgba(156, 39, 176, 0.3); }
+    .color-5 { color: var(--orange); border-color: rgba(255, 159, 41, 0.3); }
+    .color-6 { color: #008080; border-color: rgba(0, 128, 128, 0.3); }
+    .color-7 { color: #E63946; border-color: rgba(230, 57, 70, 0.3); }
+    .color-8 { color: #2A9D8F; border-color: rgba(42, 157, 143, 0.3); }
+    .color-9 { color: #457B9D; border-color: rgba(69, 123, 157, 0.3); }
+    .color-10 { color: #9A8C98; border-color: rgba(154, 140, 152, 0.3); }
+    .color-11 { color: #6D597A; border-color: rgba(109, 89, 122, 0.3); }
+
+    .color-bg-0 { background-color: rgba(255, 107, 139, 0.08); }
+    .color-bg-1 { background-color: rgba(77, 150, 255, 0.08); }
+    .color-bg-2 { background-color: rgba(107, 203, 119, 0.08); }
+    .color-bg-3 { background-color: rgba(221, 161, 94, 0.08); }
+    .color-bg-4 { background-color: rgba(156, 39, 176, 0.08); }
+    .color-bg-5 { background-color: rgba(255, 159, 41, 0.08); }
+    .color-bg-6 { background-color: rgba(0, 128, 128, 0.08); }
+    .color-bg-7 { background-color: rgba(230, 57, 70, 0.08); }
+    .color-bg-8 { background-color: rgba(42, 157, 143, 0.08); }
+    .color-bg-9 { background-color: rgba(69, 123, 157, 0.08); }
+    .color-bg-10 { background-color: rgba(154, 140, 152, 0.08); }
+    .color-bg-11 { background-color: rgba(109, 89, 122, 0.08); }
+
+    /* Footer branding */
+    footer {
+      margin-top: auto;
+      padding-top: 40px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: var(--pink);
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+  <!-- Floating background bubbles for sensory fun -->
+  <div class="bubbles" id="bubbles-container"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="brand" onclick="navigateTo('home')">🌟 Kids Learning</div>
+      <div class="header-actions">
+        <button class="btn-circle" id="theme-btn" onclick="toggleTheme()" title="Switch Light/Dark Mode">☀️</button>
+        <button class="btn-circle" onclick="navigateTo('future-room')" title="Fun Coming Soon Room">🚀</button>
+      </div>
+    </header>
+
+    <!-- Main Content Views -->
+
+    <!-- HOME VIEW -->
+    <div id="view-home" class="view active">
+      <h1 class="hero-title">Welcome to <span>Kids Learning!</span></h1>
+      <div class="grid-categories">
+        <div class="kid-card" onclick="navigateTo('category-english')">
+          <span class="card-badge" style="color: var(--pink); background: rgba(255,107,139,0.1)">English</span>
+          <div class="card-icon">🔤</div>
+          <h2 class="card-title" style="color: var(--pink);">English</h2>
+          <p class="card-desc">Learn English Alphabets and lovely words with smart pronunciation!</p>
+        </div>
+        <div class="kid-card" onclick="navigateTo('category-gujarati')">
+          <span class="card-badge" style="color: var(--blue); background: rgba(77,150,255,0.1)">ગુજરાતી</span>
+          <div class="card-icon">🕉️</div>
+          <h2 class="card-title" style="color: var(--blue);">Gujarati</h2>
+          <p class="card-desc">શીખો ગુજરાતી કક્કો સચિત્ર અને અવાજ સાથે ખૂબ જ સરળ રીતે!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGLISH CATEGORY VIEW -->
+    <div id="view-category-english" class="view">
+      <button class="back-nav" onclick="navigateTo('home')">← Back to Home</button>
+      <h1 class="hero-title" style="font-size: 32px;">English <span>Learning Room</span></h1>
+      <div class="grid-categories">
+        <div class="kid-card" onclick="startEnglishAlphabet()">
+          <div class="card-icon">🅰️</div>
+          <h2 class="card-title" style="color: var(--pink);">English Alphabet</h2>
+          <p class="card-desc">Interactive flashcards from A to Z with speech!</p>
+        </div>
+        <div class="kid-card" onclick="startEnglishWords()">
+          <div class="card-icon">🍎</div>
+          <h2 class="card-title" style="color: var(--green);">English Words</h2>
+          <p class="card-desc">Discover fun words from A to Z with pictures!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUJARATI CATEGORY VIEW -->
+    <div id="view-category-gujarati" class="view">
+      <button class="back-nav" onclick="navigateTo('home')">← Back to Home</button>
+      <h1 class="hero-title" style="font-size: 32px;">ગુજરાતી <span>શિક્ષણ વર્ગ</span></h1>
+      <div class="grid-categories">
+        <div class="kid-card" onclick="startGujaratiAlphabet()">
+          <div class="card-icon">🗣️</div>
+          <h2 class="card-title" style="color: var(--blue); font-family: var(--font-gujarati);">ગુજરાતી કક્કો</h2>
+          <p class="card-desc">ક થી જ્ઞ સુધીના અક્ષરો સુંદર અવાજ સાથે શીખો!</p>
+        </div>
+        <div class="kid-card" onclick="navigateTo('future-room')">
+          <div class="card-icon" style="filter: grayscale(1)">📙</div>
+          <h2 class="card-title" style="color: var(--text-muted); font-family: var(--font-gujarati);">ગુજરાતી શબ્દો</h2>
+          <p class="card-desc" style="color: var(--text-muted);">ટૂંક સમયમાં આવી રહ્યું છે! Coming soon!</p>
+          <span class="card-badge" style="background-color: var(--border-color); color: var(--text-muted)">🔒 Locked</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGLISH ALPHABET CAROUSEL VIEW -->
+    <div id="view-english-alphabet" class="view">
+      <button class="back-nav" onclick="navigateTo('category-english')">← Back to English Room</button>
+      
+      <div class="carousel-container">
+        <div class="flash-card" id="eng-alpha-card">
+          <div class="large-letter" id="eng-alpha-char">A</div>
+          <div class="card-footer-info" id="eng-alpha-index">Card 1 of 26</div>
+        </div>
+
+        <div class="controls-wrapper">
+          <button class="btn-nav btn-prev" onclick="changeEngAlpha(-1)">Previous</button>
+          <button class="btn-speak" onclick="speakEngAlpha()" title="Pronounce Letter">🔊</button>
+          <button class="btn-nav btn-next" onclick="changeEngAlpha(1)">Next</button>
+        </div>
+
+        <div class="sound-toggle-bar">
+          <input type="checkbox" id="chk-auto-speak-alpha" checked>
+          <label for="chk-auto-speak-alpha">Auto play sound on change</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGLISH WORDS CAROUSEL VIEW -->
+    <div id="view-english-words" class="view">
+      <button class="back-nav" onclick="navigateTo('category-english')">← Back to English Room</button>
+      
+      <div class="carousel-container">
+        <div class="flash-card" id="eng-word-card">
+          <div class="large-letter" id="eng-word-letter" style="font-size: 40px; margin-bottom: 5px;">A</div>
+          <div class="large-emoji" id="eng-word-emoji">🍎</div>
+          <div class="word-text" id="eng-word-text">Apple</div>
+          <div class="card-footer-info" id="eng-word-index">Card 1 of 26</div>
+        </div>
+
+        <div class="controls-wrapper">
+          <button class="btn-nav btn-prev" onclick="changeEngWord(-1)">Previous</button>
+          <button class="btn-speak" onclick="speakEngWord()" title="Pronounce Word">🔊</button>
+          <button class="btn-nav btn-next" onclick="changeEngWord(1)">Next</button>
+        </div>
+
+        <div class="sound-toggle-bar">
+          <input type="checkbox" id="chk-auto-speak-word" checked>
+          <label for="chk-auto-speak-word">Auto play sound on change</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUJARATI ALPHABET CAROUSEL VIEW -->
+    <div id="view-gujarati-alphabet" class="view">
+      <button class="back-nav" onclick="navigateTo('category-gujarati')">← Back to Gujarati Room</button>
+      
+      <div class="tabs-container">
+        <button class="tab-btn active" id="tab-vowels" onclick="switchGujTab('vowels')">Vowels (સ્વર)</button>
+        <button class="tab-btn" id="tab-consonants" onclick="switchGujTab('consonants')">Consonants (વ્યંજન)</button>
+      </div>
+      
+      <div class="carousel-container">
+        <div class="flash-card" id="guj-alpha-card">
+          <div class="large-letter gujarati-letter" id="guj-alpha-char">ક</div>
+          <div class="phonetic" id="guj-alpha-phonetic">Phonetic: Ka</div>
+          
+          <div style="display:flex; align-items:center; gap: 10px; margin-top: 5px;">
+            <span id="guj-alpha-emoji" style="font-size: 32px;">🪷</span>
+            <span id="guj-alpha-word" style="font-size: 24px; font-weight: 700; color: var(--text-main); font-family: var(--font-gujarati);">કમળ</span>
+            <span id="guj-alpha-english" style="font-size: 16px; color: var(--text-muted); font-weight: 500;">(Lotus)</span>
+          </div>
+
+          <div class="card-footer-info" id="guj-alpha-index">Card 1 of 46</div>
+        </div>
+
+        <div class="controls-wrapper">
+          <button class="btn-nav btn-prev" onclick="changeGujAlpha(-1)">Previous</button>
+          <button class="btn-speak" id="guj-speak-btn" onclick="speakGujAlpha()" title="Pronounce Gujarati Letter">🔊</button>
+          <button class="btn-nav btn-next" onclick="changeGujAlpha(1)">Next</button>
+        </div>
+
+        <div class="sound-toggle-bar">
+          <input type="checkbox" id="chk-auto-speak-guj" checked>
+          <label for="chk-auto-speak-guj">Auto play sound on change</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- FUTURE COMING SOON ROOM -->
+    <div id="view-future-room" class="view">
+      <button class="back-nav" onclick="navigateTo('home')">← Back to Home</button>
+      <h1 class="hero-title" style="font-size: 32px;">Kids <span>Adventure Room</span></h1>
+      
+      <div class="future-banner">
+        <h3 style="font-size: 18px; margin-bottom: 5px; color: var(--pink)">🌟 Coming Soon in Future Updates!</h3>
+        <p style="font-size: 14px; color: var(--text-muted)">We are preparing high-quality educational mini-games, drawing activities, and numbers sheets for our little superstars!</p>
+      </div>
+
+      <div class="future-grid" id="future-grid-container">
+        <!-- Will be populated dynamically -->
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Created for <strong>Blogger (Blogspot)</strong>. Easy to embed!</p>
+    </footer>
+  </div>
+
+  <script>
+    // DATASETS
+    const ENGLISH_ALPHABET = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+
+    const ENGLISH_WORDS = [
+      { letter: 'A', word: 'Apple', emoji: '🍎' },
+      { letter: 'B', word: 'Ball', emoji: '⚽' },
+      { letter: 'C', word: 'Cat', emoji: '🐱' },
+      { letter: 'D', word: 'Dog', emoji: '🐶' },
+      { letter: 'E', word: 'Elephant', emoji: '🐘' },
+      { letter: 'F', word: 'Fish', emoji: '🐟' },
+      { letter: 'G', word: 'Grapes', emoji: '🍇' },
+      { letter: 'H', word: 'Horse', emoji: '🐴' },
+      { letter: 'I', word: 'Ice Cream', emoji: '🍦' },
+      { letter: 'J', word: 'Jellyfish', emoji: '🪼' },
+      { letter: 'K', word: 'Kite', emoji: '🪁' },
+      { letter: 'L', word: 'Lion', emoji: '🦁' },
+      { letter: 'M', word: 'Monkey', emoji: '🐒' },
+      { letter: 'N', word: 'Nest', emoji: '🪹' },
+      { letter: 'O', word: 'Orange', emoji: '🍊' },
+      { letter: 'P', word: 'Parrot', emoji: '🦜' },
+      { letter: 'Q', word: 'Queen', emoji: '👸' },
+      { letter: 'R', word: 'Rabbit', emoji: '🐰' },
+      { letter: 'S', word: 'Sun', emoji: '☀️' },
+      { letter: 'T', word: 'Tiger', emoji: '🐯' },
+      { letter: 'U', word: 'Umbrella', emoji: '☂️' },
+      { letter: 'V', word: 'Violin', emoji: '🎻' },
+      { letter: 'W', word: 'Watermelon', emoji: '🍉' },
+      { letter: 'X', word: 'Xylophone', emoji: '🪗' },
+      { letter: 'Y', word: 'Yak', emoji: '🐂' },
+      { letter: 'Z', word: 'Zebra', emoji: '🦓' }
+    ];
+
+    const GUJARATI_ALPHABET = [
+      // Vowels (Svar)
+      { letter: 'અ', phonetic: 'A', word: 'અજગર', emoji: '🐍', english: 'Python' },
+      { letter: 'આ', phonetic: 'Aa', word: 'આગગાડી', emoji: '🚂', english: 'Train' },
+      { letter: 'ઇ', phonetic: 'I', word: 'ઇમારત', emoji: '🏢', english: 'Building' },
+      { letter: 'ઈ', phonetic: 'Ee', word: 'ઈશ્વર', emoji: '🛕', english: 'Temple' },
+      { letter: 'ઉ', phonetic: 'U', word: 'ઉપવન', emoji: '🏡', english: 'Garden' },
+      { letter: 'ઊ', phonetic: 'Oo', word: 'ઊન', emoji: '🧶', english: 'Wool' },
+      { letter: 'એ', phonetic: 'E', word: 'એકતા', emoji: '1️⃣', english: 'Unity' },
+      { letter: 'ઐ', phonetic: 'Ai', word: 'ઐરાવત', emoji: '🐘', english: 'Elephant' },
+      { letter: 'ઓ', phonetic: 'O', word: 'ઓજાર', emoji: '🔧', english: 'Tools' },
+      { letter: 'ઔ', phonetic: 'Au', word: 'ઔષધ', emoji: '💊', english: 'Medicine' },
+      { letter: 'અં', phonetic: 'Am', word: 'અંજીર', emoji: '🫚', english: 'Fig' },
+      { letter: 'અઃ', phonetic: 'Aha', word: 'નમઃ', emoji: '🙏', english: 'Namaste' },
+
+      // Consonants (Vyanjan)
+      { letter: 'ક', phonetic: 'Ka', word: 'કમળ', emoji: '🪷', english: 'Lotus' },
+      { letter: 'ખ', phonetic: 'Kha', word: 'ખલ', emoji: '🥣', english: 'Mortar' },
+      { letter: 'ગ', phonetic: 'Ga', word: 'ગણપતિ', emoji: '🔱', english: 'Lord Ganesha' },
+      { letter: 'ઘ', phonetic: 'Gha', word: 'ઘર', emoji: '🏠', english: 'House' },
+      { letter: 'ચ', phonetic: 'Cha', word: 'ચકલી', emoji: '🐦', english: 'Sparrow' },
+      { letter: 'છ', phonetic: 'Chha', word: 'છત્રી', emoji: '☂️', english: 'Umbrella' },
+      { letter: 'જ', phonetic: 'Ja', word: 'જમરૂખ', emoji: '🍏', english: 'Guava' },
+      { letter: 'ઝ', phonetic: 'Jha', word: 'ઝભ્ભું', emoji: '🥋', english: 'Kurtas' },
+      { letter: 'ટ', phonetic: 'Ta', word: 'ટમેટું', emoji: '🍅', english: 'Tomato' },
+      { letter: 'ઠ', phonetic: 'Tha', word: 'ઠળિયો', emoji: '🍒', english: 'Seed' },
+      { letter: 'ડ', phonetic: 'Da', word: 'ડમરુ', emoji: '🪘', english: 'Drum' },
+      { letter: 'ઢ', phonetic: 'Dha', word: 'ઢગલો', emoji: '⛰️', english: 'Pile' },
+      { letter: 'ણ', phonetic: 'Na', word: 'ફેણ', emoji: '🐍', english: 'Cobra Hood' },
+      { letter: 'ત', phonetic: 'Ta', word: 'તપેલી', emoji: '🫕', english: 'Pot' },
+      { letter: 'થ', phonetic: 'Tha', word: 'થડ', emoji: '🪵', english: 'Tree Trunk' },
+      { letter: 'દ', phonetic: 'Da', word: 'દડો', emoji: '⚽', english: 'Ball' },
+      { letter: 'ધ', phonetic: 'Dha', word: 'ધનુષ', emoji: '🏹', english: 'Bow' },
+      { letter: 'ન', phonetic: 'Na', word: 'નળ', emoji: '🚰', english: 'Tap' },
+      { letter: 'પ', phonetic: 'Pa', word: 'પતંગ', emoji: '🪁', english: 'Kite' },
+      { letter: 'ફ', phonetic: 'Pha', word: 'ફટાકડા', emoji: '🎆', english: 'Firecrackers' },
+      { letter: 'બ', phonetic: 'Ba', word: 'બતક', emoji: '🦆', english: 'Duck' },
+      { letter: 'ભ', phonetic: 'Bha', word: 'ભમરડો', emoji: '🪀', english: 'Spinning Top' },
+      { letter: 'મ', phonetic: 'Ma', word: 'મરચું', emoji: '🌶️', english: 'Chilli' },
+      { letter: 'ય', phonetic: 'Ya', word: 'યજ્ઞ', emoji: '🔥', english: 'Sacred Fire' },
+      { letter: 'ર', phonetic: 'Ra', word: 'રમકડું', emoji: '🧸', english: 'Toy' },
+      { letter: 'લ', phonetic: 'La', word: 'લખોટી', emoji: '🔮', english: 'Marbles' },
+      { letter: 'વ', phonetic: 'Va', word: 'વહાણ', emoji: '🚢', english: 'Ship' },
+      { letter: 'શ', phonetic: 'Sha', word: 'શરણાઈ', emoji: '🎷', english: 'Clarinet' },
+      { letter: 'ષ', phonetic: 'Sha', word: 'ષટ્કોણ', emoji: '⬡', english: 'Hexagon' },
+      { letter: 'સ', phonetic: 'Sa', word: 'સસલું', emoji: '🐰', english: 'Rabbit' },
+      { letter: 'હ', phonetic: 'Ha', word: 'હરણ', emoji: '🦌', english: 'Deer' },
+      { letter: 'ળ', phonetic: 'La', word: 'નળ', emoji: '🚰', english: 'Water Tap' },
+      { letter: 'ક્ષ', phonetic: 'Ksha', word: 'ક્ષત્રિય', emoji: '⚔️', english: 'Warrior' },
+      { letter: 'જ્ઞ', phonetic: 'Gnya', word: 'યજ્ઞ', emoji: '🧠', english: 'Sage' }
+    ];
+
+    const FUTURE_SECTIONS = [
+      { title: 'Gujarati Words', emoji: '📖', category: 'Gujarati' },
+      { title: 'English Numbers', emoji: '🔢', category: 'English' },
+      { title: 'Gujarati Numbers', emoji: '૧૨૩', category: 'Gujarati' },
+      { title: 'Barakhadi (બારાખડી)', emoji: '📚', category: 'Gujarati' },
+      { title: 'Games Room', emoji: '🕹️', category: 'Activity' },
+      { title: 'Letter Match', emoji: '🧩', category: 'Game' },
+      { title: 'Number Trace', emoji: '✏️', category: 'Practice' },
+      { title: 'Quiz Arena', emoji: '🏆', category: 'Game' },
+      { title: 'Flashcards Room', emoji: '🗂️', category: 'General' },
+      { title: 'Animal Sounds', emoji: '🦁', category: 'General' },
+      { title: 'Shapes & Colors', emoji: '🔺', category: 'General' }
+    ];
+
+    // STATE VARIABLES
+    const GUJARATI_VOWELS = GUJARATI_ALPHABET.slice(0, 12);
+    const GUJARATI_CONSONANTS = GUJARATI_ALPHABET.slice(12);
+
+    let currentEngAlphaIdx = 0;
+    let currentEngWordIdx = 0;
+    let currentGujTab = 'vowels';
+    let currentGujVowelIdx = 0;
+    let currentGujConsonantIdx = 0;
+
+    // VOICE WARM-UP
+    if (window.speechSynthesis) {
+      window.speechSynthesis.getVoices();
+    }
+
+    // INITIALIZE BUBBLES
+    function createBubbles() {
+      const container = document.getElementById('bubbles-container');
+      if (!container) return;
+      
+      const numberOfBubbles = window.innerWidth < 600 ? 12 : 25;
+      
+      for (let i = 0; i < numberOfBubbles; i++) {
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        
+        const size = Math.random() * 40 + 20; // 20px to 60px
+        bubble.style.width = \`\${size}px\`;
+        bubble.style.height = \`\${size}px\`;
+        
+        bubble.style.left = \`\${Math.random() * 100}%\`;
+        bubble.style.animationDelay = \`\${Math.random() * 10}s\`;
+        bubble.style.animationDuration = \`\${Math.random() * 8 + 8}s\`;
+        
+        container.appendChild(bubble);
+      }
+    }
+
+    // THEME HANDLING
+    function toggleTheme() {
+      const body = document.body;
+      const themeBtn = document.getElementById('theme-btn');
+      const currentTheme = body.getAttribute('data-theme');
+      
+      if (currentTheme === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        themeBtn.innerText = '☀️';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        themeBtn.innerText = '🌙';
+      }
+    }
+
+    // NAVIGATION
+    function navigateTo(viewId) {
+      // Hide all views
+      document.querySelectorAll('.view').forEach(view => {
+        view.classList.remove('active');
+      });
+
+      // Show requested view
+      const targetView = document.getElementById(\`view-\${viewId}\`);
+      if (targetView) {
+        targetView.classList.add('active');
+      }
+
+      // Automatically trigger sound if checked and inside a carousel
+      if (viewId === 'english-alphabet') {
+        updateEngAlphaCard();
+      } else if (viewId === 'english-words') {
+        updateEngWordCard();
+      } else if (viewId === 'gujarati-alphabet') {
+        updateGujAlphaCard();
+      }
+    }
+
+    // TEXT TO SPEECH UTILITY
+    function speak(text, lang, englishPhoneticFallback) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel(); // Stop current speaking
+
+      const voices = window.speechSynthesis.getVoices();
+      let bestVoice = null;
+
+      if (lang === 'gu') {
+        // 1. Look for a native Gujarati voice
+        bestVoice = voices.find(v => {
+          const l = v.lang.toLowerCase().replace('_', '-');
+          return l === 'gu-in' || l.startsWith('gu-') || v.name.toLowerCase().includes('gujarati');
+        });
+        
+        // 2. Hindi voice fallback (excellent phonetics for Devanagari/Gujarati characters)
+        if (!bestVoice) {
+          bestVoice = voices.find(v => {
+            const l = v.lang.toLowerCase().replace('_', '-');
+            return l === 'hi-in' || l.startsWith('hi-') || v.name.toLowerCase().includes('hindi');
+          });
+        }
+        
+        // 3. English India voice
+        if (!bestVoice) {
+          bestVoice = voices.find(v => {
+            const l = v.lang.toLowerCase().replace('_', '-');
+            return l === 'en-in' || l.startsWith('en-in');
+          });
+        }
+
+        // 4. Any Indian voice
+        if (!bestVoice) {
+          bestVoice = voices.find(v => {
+            const l = v.lang.toLowerCase().replace('_', '-');
+            return l.endsWith('-in') || v.name.toLowerCase().includes('india') || v.name.toLowerCase().includes('indian');
+          });
+        }
+      } else {
+        // English
+        bestVoice = voices.find(v => {
+          const l = v.lang.toLowerCase().replace('_', '-');
+          return l === 'en-us' || l === 'en-gb';
+        });
+        if (!bestVoice) {
+          bestVoice = voices.find(v => v.lang.toLowerCase().startsWith('en'));
+        }
+      }
+
+      let textToSpeak = text;
+      if (lang === 'gu') {
+        const isGujaratiOrHindi = bestVoice && (
+          bestVoice.lang.toLowerCase().startsWith('gu') || 
+          bestVoice.lang.toLowerCase().startsWith('hi') ||
+          bestVoice.name.toLowerCase().includes('gujarati') ||
+          bestVoice.name.toLowerCase().includes('hindi')
+        );
+
+        // If no Gujarati/Hindi voice exists and fallback is provided, use phonetic spelling
+        if (!isGujaratiOrHindi && englishPhoneticFallback) {
+          textToSpeak = englishPhoneticFallback;
+        }
+      }
+
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.rate = 0.82;
+
+      if (bestVoice) {
+        utterance.voice = bestVoice;
+        utterance.lang = bestVoice.lang;
+      } else if (lang === 'gu') {
+        utterance.lang = 'gu-IN';
+      } else {
+        utterance.lang = 'en-US';
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // ENGLISH ALPHABET SLIDER
+    function startEnglishAlphabet() {
+      currentEngAlphaIdx = 0;
+      navigateTo('english-alphabet');
+    }
+
+    function changeEngAlpha(dir) {
+      currentEngAlphaIdx += dir;
+      if (currentEngAlphaIdx < 0) currentEngAlphaIdx = ENGLISH_ALPHABET.length - 1;
+      if (currentEngAlphaIdx >= ENGLISH_ALPHABET.length) currentEngAlphaIdx = 0;
+      
+      // Animation class
+      const card = document.getElementById('eng-alpha-card');
+      const animClass = dir > 0 ? 'animate-next' : 'animate-prev';
+      card.classList.remove('animate-next', 'animate-prev');
+      void card.offsetWidth; // trigger reflow
+      card.className = \`flash-card \${animClass}\`;
+      
+      updateEngAlphaCard();
+    }
+
+    function updateEngAlphaCard() {
+      const letter = ENGLISH_ALPHABET[currentEngAlphaIdx];
+      const card = document.getElementById('eng-alpha-card');
+      const charEl = document.getElementById('eng-alpha-char');
+      const indexEl = document.getElementById('eng-alpha-index');
+      
+      charEl.innerText = letter;
+      indexEl.innerText = \`Card \${currentEngAlphaIdx + 1} of 26\`;
+      
+      // Update color based on alphabet index
+      const colorIndex = currentEngAlphaIdx % 12;
+      card.style.borderColor = \`var(--border-color)\`;
+      charEl.className = \`large-letter color-\${colorIndex}\`;
+      card.className = card.className.replace(/color-bg-\\d+/g, '') + \` color-bg-\${colorIndex}\`;
+
+      // Speak automatically if enabled
+      if (document.getElementById('chk-auto-speak-alpha').checked) {
+        setTimeout(() => speakEngAlpha(), 150);
+      }
+    }
+
+    function speakEngAlpha() {
+      const letter = ENGLISH_ALPHABET[currentEngAlphaIdx];
+      speak(letter, 'en');
+    }
+
+    // ENGLISH WORDS SLIDER
+    function startEnglishWords() {
+      currentEngWordIdx = 0;
+      navigateTo('english-words');
+    }
+
+    function changeEngWord(dir) {
+      currentEngWordIdx += dir;
+      if (currentEngWordIdx < 0) currentEngWordIdx = ENGLISH_WORDS.length - 1;
+      if (currentEngWordIdx >= ENGLISH_WORDS.length) currentEngWordIdx = 0;
+
+      const card = document.getElementById('eng-word-card');
+      const animClass = dir > 0 ? 'animate-next' : 'animate-prev';
+      card.classList.remove('animate-next', 'animate-prev');
+      void card.offsetWidth; // trigger reflow
+      card.className = \`flash-card \${animClass}\`;
+
+      updateEngWordCard();
+    }
+
+    function updateEngWordCard() {
+      const item = ENGLISH_WORDS[currentEngWordIdx];
+      const card = document.getElementById('eng-word-card');
+      const letterEl = document.getElementById('eng-word-letter');
+      const emojiEl = document.getElementById('eng-word-emoji');
+      const textEl = document.getElementById('eng-word-text');
+      const indexEl = document.getElementById('eng-word-index');
+
+      letterEl.innerText = item.letter;
+      emojiEl.innerText = item.emoji;
+      textEl.innerText = item.word;
+      indexEl.innerText = \`Card \${currentEngWordIdx + 1} of 26\`;
+
+      const colorIndex = currentEngWordIdx % 12;
+      letterEl.className = \`large-letter color-\${colorIndex}\`;
+      textEl.className = \`word-text color-\${colorIndex}\`;
+      card.className = card.className.replace(/color-bg-\\d+/g, '') + \` color-bg-\${colorIndex}\`;
+
+      if (document.getElementById('chk-auto-speak-word').checked) {
+        setTimeout(() => speakEngWord(), 150);
+      }
+    }
+
+    function speakEngWord() {
+      const item = ENGLISH_WORDS[currentEngWordIdx];
+      speak(\`\${item.letter} for \${item.word}\`, 'en');
+    }
+
+    // GUJARATI ALPHABET SLIDER
+    function startGujaratiAlphabet() {
+      currentGujTab = 'vowels';
+      currentGujVowelIdx = 0;
+      currentGujConsonantIdx = 0;
+      
+      // Update active state of tab buttons
+      document.getElementById('tab-vowels').classList.add('active');
+      document.getElementById('tab-consonants').classList.remove('active');
+
+      navigateTo('gujarati-alphabet');
+    }
+
+    function switchGujTab(tab) {
+      currentGujTab = tab;
+      
+      // Update active state of tab buttons
+      document.getElementById('tab-vowels').classList.toggle('active', tab === 'vowels');
+      document.getElementById('tab-consonants').classList.toggle('active', tab === 'consonants');
+
+      const card = document.getElementById('guj-alpha-card');
+      card.classList.remove('animate-next', 'animate-prev');
+      void card.offsetWidth; // trigger reflow
+      card.className = "flash-card animate-next";
+      
+      updateGujAlphaCard();
+      
+      if (document.getElementById('chk-auto-speak-guj').checked) {
+        speakGujAlpha();
+      }
+    }
+
+    function changeGujAlpha(dir) {
+      const currentArray = currentGujTab === 'vowels' ? GUJARATI_VOWELS : GUJARATI_CONSONANTS;
+      
+      if (currentGujTab === 'vowels') {
+        currentGujVowelIdx += dir;
+        if (currentGujVowelIdx < 0) currentGujVowelIdx = currentArray.length - 1;
+        if (currentGujVowelIdx >= currentArray.length) currentGujVowelIdx = 0;
+      } else {
+        currentGujConsonantIdx += dir;
+        if (currentGujConsonantIdx < 0) currentGujConsonantIdx = currentArray.length - 1;
+        if (currentGujConsonantIdx >= currentArray.length) currentGujConsonantIdx = 0;
+      }
+
+      const card = document.getElementById('guj-alpha-card');
+      const animClass = dir > 0 ? 'animate-next' : 'animate-prev';
+      card.classList.remove('animate-next', 'animate-prev');
+      void card.offsetWidth; // trigger reflow
+      card.className = \`flash-card \${animClass}\`;
+
+      updateGujAlphaCard();
+
+      if (document.getElementById('chk-auto-speak-guj').checked) {
+        speakGujAlpha();
+      }
+    }
+
+    function updateGujAlphaCard() {
+      const currentArray = currentGujTab === 'vowels' ? GUJARATI_VOWELS : GUJARATI_CONSONANTS;
+      const currentIdx = currentGujTab === 'vowels' ? currentGujVowelIdx : currentGujConsonantIdx;
+      const item = currentArray[currentIdx];
+      const card = document.getElementById('guj-alpha-card');
+      const charEl = document.getElementById('guj-alpha-char');
+      const phoneticEl = document.getElementById('guj-alpha-phonetic');
+      const emojiEl = document.getElementById('guj-alpha-emoji');
+      const wordEl = document.getElementById('guj-alpha-word');
+      const englishEl = document.getElementById('guj-alpha-english');
+      const indexEl = document.getElementById('guj-alpha-index');
+
+      charEl.innerText = item.letter;
+      phoneticEl.innerText = \`Pronunciation: \${item.phonetic}\`;
+      emojiEl.innerText = item.emoji;
+      wordEl.innerText = item.word;
+      englishEl.innerText = \`(\${item.english})\`;
+      indexEl.innerText = \`Card \${currentIdx + 1} of \${currentArray.length}\`;
+
+      const colorIndex = currentIdx % 12;
+      charEl.className = \`large-letter gujarati-letter color-\${colorIndex}\`;
+      wordEl.className = \`color-\${colorIndex}\`;
+      card.className = card.className.replace(/color-bg-\\d+/g, '') + \` color-bg-\${colorIndex}\`;
+    }
+
+    function speakGujAlpha() {
+      const currentArray = currentGujTab === 'vowels' ? GUJARATI_VOWELS : GUJARATI_CONSONANTS;
+      const currentIdx = currentGujTab === 'vowels' ? currentGujVowelIdx : currentGujConsonantIdx;
+      const item = currentArray[currentIdx];
+      // Speaks letter, then word with English phonetic fallback
+      speak(\`\${item.letter}, \${item.word}\`, 'gu', \`\${item.phonetic} for \${item.english}\`);
+    }
+
+    // POPULATE FUTURE ROOM
+    function populateFutureRoom() {
+      const container = document.getElementById('future-grid-container');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      FUTURE_SECTIONS.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'future-card';
+        div.innerHTML = \`
+          <span class="future-emoji">\${item.emoji}</span>
+          <div class="future-info">
+            <h4 class="future-title">\${item.title}</h4>
+            <span class="future-badge">\${item.category}</span>
+          </div>
+        \`;
+        container.appendChild(div);
+      });
+    }
+
+    // ON LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      createBubbles();
+      populateFutureRoom();
+    });
+  </script>
+</body>
+</html>
+`;
+
+export const BLOGGER_CSS = `/* Place this code into your CSS panel in Blogger or between <style> tags */
+:root {
+  --font-primary: 'Fredoka', sans-serif;
+  --font-gujarati: 'Baloo Bhai 2', 'Fredoka', sans-serif;
+  
+  --bg-app: #FFFDF6;
+  --bg-card: #FFFFFF;
+  --text-main: #333333;
+  --text-muted: #666666;
+  --border-color: #F0EAD6;
+  --shadow-soft: 0 12px 30px rgba(255, 159, 41, 0.12);
+  
+  --pink: #FF6B8B;
+  --blue: #4D96FF;
+  --green: #6BCB77;
+  --yellow: #FFD93D;
+  --orange: #FF9F29;
+  --purple: #9C27B0;
+}
+
+[data-theme="dark"] {
+  --bg-app: #0F172A;
+  --bg-card: #1E293B;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border-color: #334155;
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
+  padding-bottom: 40px;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Category cards */
+.kid-card {
+  background-color: var(--bg-card);
+  border-radius: 32px;
+  border: 4px solid var(--border-color);
+  padding: 30px 24px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.kid-card:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+/* Carousel and buttons */
+.flash-card {
+  width: 100%;
+  background-color: var(--bg-card);
+  border-radius: 40px;
+  border: 8px solid var(--border-color);
+  box-shadow: var(--shadow-soft);
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 380px;
+  position: relative;
+  text-align: center;
+}
+
+.large-letter {
+  font-size: 130px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.gujarati-letter {
+  font-family: var(--font-gujarati);
+}
+
+.btn-speak {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--pink);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(255, 107, 139, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+}
+
+/* Tabs selector */
+.tabs-container {
+  display: flex;
+  background-color: rgba(77, 150, 255, 0.05);
+  padding: 6px;
+  border-radius: 24px;
+  border: 3px solid var(--border-color);
+  width: 100%;
+  max-width: 380px;
+  margin-bottom: 25px;
+  gap: 8px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 18px;
+  border: none;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--blue);
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  background-color: var(--blue);
+  color: white;
+  box-shadow: 0 4px 10px rgba(77, 150, 255, 0.2);
+}`;
+
+export const BLOGGER_JS = `// Kids Learning Website Javascript
+// This script runs the navigation, sliders, and Web Speech synthesis.
+
+const ENGLISH_ALPHABET = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+
+const ENGLISH_WORDS = [
+  { letter: 'A', word: 'Apple', emoji: '🍎' },
+  { letter: 'B', word: 'Ball', emoji: '⚽' },
+  // ... (Full dataset is contained in the HTML single file!)
+];
+
+let currentEngAlphaIdx = 0;
+
+function speak(text, lang, englishPhoneticFallback) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  
+  const voices = window.speechSynthesis.getVoices();
+  let bestVoice = null;
+
+  if (lang === 'gu') {
+    bestVoice = voices.find(v => {
+      const l = v.lang.toLowerCase().replace('_', '-');
+      return l === 'gu-in' || l.startsWith('gu-') || v.name.toLowerCase().includes('gujarati');
+    });
+    if (!bestVoice) {
+      bestVoice = voices.find(v => {
+        const l = v.lang.toLowerCase().replace('_', '-');
+        return l === 'hi-in' || l.startsWith('hi-') || v.name.toLowerCase().includes('hindi');
+      });
+    }
+    if (!bestVoice) {
+      bestVoice = voices.find(v => {
+        const l = v.lang.toLowerCase().replace('_', '-');
+        return l === 'en-in' || l.startsWith('en-in');
+      });
+    }
+    if (!bestVoice) {
+      bestVoice = voices.find(v => {
+        const l = v.lang.toLowerCase().replace('_', '-');
+        return l.endsWith('-in') || v.name.toLowerCase().includes('india') || v.name.toLowerCase().includes('indian');
+      });
+    }
+  } else {
+    bestVoice = voices.find(v => {
+      const l = v.lang.toLowerCase().replace('_', '-');
+      return l === 'en-us' || l === 'en-gb';
+    });
+    if (!bestVoice) {
+      bestVoice = voices.find(v => v.lang.toLowerCase().startsWith('en'));
+    }
+  }
+
+  let textToSpeak = text;
+  if (lang === 'gu') {
+    const isGujaratiOrHindi = bestVoice && (
+      bestVoice.lang.toLowerCase().startsWith('gu') || 
+      bestVoice.lang.toLowerCase().startsWith('hi') ||
+      bestVoice.name.toLowerCase().includes('gujarati') ||
+      bestVoice.name.toLowerCase().includes('hindi')
+    );
+    if (!isGujaratiOrHindi && englishPhoneticFallback) {
+      textToSpeak = englishPhoneticFallback;
+    }
+  }
+
+  const utterance = new SpeechSynthesisUtterance(textToSpeak);
+  utterance.rate = 0.82;
+
+  if (bestVoice) {
+    utterance.voice = bestVoice;
+    utterance.lang = bestVoice.lang;
+  } else if (lang === 'gu') {
+    utterance.lang = 'gu-IN';
+  } else {
+    utterance.lang = 'en-US';
+  }
+
+  window.speechSynthesis.speak(utterance);
+}`;

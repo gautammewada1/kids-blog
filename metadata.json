@@ -1,0 +1,6 @@
+{
+  "name": "Kids Learning",
+  "description": "An interactive, colorful, and speech-enabled educational website for kids to learn English and Gujarati alphabets and words. Features child-friendly design, text-to-speech, and offline support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
