@@ -16,6 +16,7 @@ import WordsView from './components/WordsView';
 import GujaratiAlphabetView from './components/GujaratiAlphabetView';
 import FutureScopeView from './components/FutureScopeView';
 import BloggerExporter from './components/BloggerExporter';
+import QuizView from './components/QuizView';
 
 export default function App() {
   const [view, setView] = useState<ViewType>('home');
@@ -129,6 +130,15 @@ export default function App() {
               <motion.div key="exporter" className="w-full">
                 <BloggerExporter 
                   onBack={handleBackToHome} 
+                />
+              </motion.div>
+            )}
+
+            {view === 'quiz' && (
+              <motion.div key="quiz" className="w-full">
+                <QuizView 
+                  onBack={handleBackToHome} 
+                  autoSpeak={autoSpeak} 
                 />
               </motion.div>
             )}

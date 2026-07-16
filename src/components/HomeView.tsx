@@ -48,7 +48,7 @@ export default function HomeView({ onSelectCategory, setView }: HomeViewProps) {
       </div>
 
       {/* Two main category cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl px-4 mb-8">
         {/* English Category Card */}
         <motion.div
           whileHover={{ y: -10, scale: 1.02 }}
@@ -97,6 +97,43 @@ export default function HomeView({ onSelectCategory, setView }: HomeViewProps) {
           </p>
         </motion.div>
       </div>
+
+      {/* Prominent Playful Quiz Banner */}
+      <motion.div
+        whileHover={{ y: -6, scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+        onClick={() => setView('quiz')}
+        className="w-full max-w-3xl px-4"
+      >
+        <div className="bg-gradient-to-r from-amber-400/10 via-orange-400/10 to-pink-500/10 dark:from-slate-900 dark:to-slate-900 border-4 border-amber-300/60 dark:border-slate-800 rounded-[36px] p-6 flex flex-col sm:flex-row items-center gap-6 cursor-pointer relative overflow-hidden group shadow-sm">
+          {/* Sparkles decoration */}
+          <div className="absolute -right-6 -bottom-6 text-9xl opacity-10 pointer-events-none group-hover:scale-125 transition-transform duration-300">
+            🏆
+          </div>
+
+          <div className="text-6xl bg-amber-100 dark:bg-slate-800 p-4 rounded-[24px] filter drop-shadow-md group-hover:scale-110 group-hover:rotate-6 transition-all">
+            🏆
+          </div>
+
+          <div className="flex-1 text-center sm:text-left">
+            <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
+              <h3 className="text-2xl font-black text-slate-800 dark:text-white">
+                Interactive Quiz Arena
+              </h3>
+              <span className="bg-amber-500 text-white text-[10px] font-black tracking-wider px-2 py-0.5 rounded-full uppercase">
+                New Game
+              </span>
+            </div>
+            <p className="text-slate-600 dark:text-slate-400 font-medium text-sm leading-relaxed max-w-md">
+              Test your knowledge! Listen to letters or words spoken out loud and pick the correct card.
+            </p>
+          </div>
+
+          <div className="bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm px-6 py-3 rounded-2xl shadow-md shadow-amber-200 dark:shadow-none whitespace-nowrap">
+            Let's Play! 🚀
+          </div>
+        </div>
+      </motion.div>
 
     </motion.div>
   );
