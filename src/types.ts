@@ -24,5 +24,5 @@ export interface GujaratiLetter {
   color: string;
 }
 
-export type ViewType = 'home' | 'english-alphabet' | 'english-words' | 'gujarati-alphabet' | 'future-room' | 'exporter' | 'category-english' | 'category-gujarati' | 'quiz';
+export type ViewType = 'home' | 'english-alphabet' | 'english-words' | 'gujarati-alphabet' | 'future-room' | 'category-english' | 'category-gujarati' | 'quiz';
 export type CategoryType = 'english' | 'gujarati';

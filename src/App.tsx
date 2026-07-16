@@ -15,7 +15,6 @@ import AlphabetView from './components/AlphabetView';
 import WordsView from './components/WordsView';
 import GujaratiAlphabetView from './components/GujaratiAlphabetView';
 import FutureScopeView from './components/FutureScopeView';
-import BloggerExporter from './components/BloggerExporter';
 import QuizView from './components/QuizView';
 
 export default function App() {
@@ -121,14 +120,6 @@ export default function App() {
             {view === 'future-room' && (
               <motion.div key="future-room" className="w-full">
                 <FutureScopeView 
-                  onBack={handleBackToHome} 
-                />
-              </motion.div>
-            )}
-
-            {view === 'exporter' && (
-              <motion.div key="exporter" className="w-full">
-                <BloggerExporter 
                   onBack={handleBackToHome} 
                 />
               </motion.div>
