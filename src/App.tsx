@@ -16,6 +16,7 @@ import WordsView from './components/WordsView';
 import EnglishNumbersView from './components/EnglishNumbersView';
 import GujaratiAlphabetView from './components/GujaratiAlphabetView';
 import GujaratiNumbersView from './components/GujaratiNumbersView';
+import GujaratiBarakhadiView from './components/GujaratiBarakhadiView';
 import FutureScopeView from './components/FutureScopeView';
 import QuizView from './components/QuizView';
 
@@ -131,6 +132,15 @@ export default function App() {
             {view === 'gujarati-numbers' && (
               <motion.div key="gujarati-numbers" className="w-full">
                 <GujaratiNumbersView 
+                  onBack={handleBackToCategory} 
+                  autoSpeak={autoSpeak} 
+                />
+              </motion.div>
+            )}
+
+            {view === 'gujarati-barakhadi' && (
+              <motion.div key="gujarati-barakhadi" className="w-full">
+                <GujaratiBarakhadiView 
                   onBack={handleBackToCategory} 
                   autoSpeak={autoSpeak} 
                 />
