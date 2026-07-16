@@ -137,7 +137,7 @@ export default function App() {
 
         {/* Minimal Footer */}
         <footer className="mt-auto pt-10 text-center text-xs font-semibold text-slate-400 dark:text-slate-500">
-          <p>© 2026 Kids Learning Portal • Purely Client-side & Offline Ready • Blogger (Blogspot) Certified</p>
+          <p>© 2026 Kids Learning Portal • Purely Client-side & Offline Ready</p>
         </footer>
       </div>
     </div>

@@ -98,17 +98,6 @@ export default function HomeView({ onSelectCategory, setView }: HomeViewProps) {
         </motion.div>
       </div>
 
-      {/* Playful Floating Cloud / Footer */}
-      <motion.div 
-        animate={{ x: [0, 15, -15, 0] }}
-        transition={{ repeat: Infinity, duration: 10, ease: 'easeInOut' }}
-        className="mt-16 flex items-center gap-2 bg-amber-50 dark:bg-slate-800/40 border border-amber-200 dark:border-slate-800 rounded-full py-2.5 px-6"
-      >
-        <span className="text-xl">🚀</span>
-        <span className="text-slate-600 dark:text-slate-400 font-bold text-sm">
-          Tip: Click the Blogger Export button in the header to get embeddable code for your blog!
-        </span>
-      </motion.div>
     </motion.div>
   );
 }
