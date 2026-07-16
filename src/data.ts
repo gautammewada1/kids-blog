@@ -144,27 +144,27 @@ export const ENGLISH_NUMBERS: EnglishNumberItem[] = Array.from({ length: 101 }, 
 const GUJARATI_NUM_WORDS = [
   'શૂન્ય', 'એક', 'બે', 'ત્રણ', 'ચાર', 'પાંચ', 'છ', 'સાત', 'આઠ', 'નવ', 'દસ',
   'અગિયાર', 'બાર', 'તેર', 'ચૌદ', 'પંદર', 'સોળ', 'સત્તર', 'અઢાર', 'ઓગણીસ', 'વીસ',
-  'એકવીસ', 'બાવીસ', 'તેવીસ', 'ચોવીસ', 'પચીસ', 'છવ્વીસ', 'સત્તાવીસ', 'અઠ્ઠાવીસ', 'ઓગણત્રીસ', 'ત્રીસ',
-  'એકત્રીસ', 'બત્રીસ', 'તેત્રીસ', 'ચોત્રીસ', 'પાંત્રીસ', 'છત્રીસ', 'સાડત્રીસ', 'આડત્રીસ', 'ઓગણચાળીસ', 'ચાલીસ',
-  'એકતાલીસ', 'બેતાલીસ', 'ત્રેતાલીસ', 'ચોમાલીસ', 'પિસ્તાલીસ', 'છેતાલીસ', 'સુડતાલીસ', 'અડતાલીસ', 'ઓગણપચાસ', 'પચાસ',
-  'એકાવન', 'બાવન', 'ત્રેપન', 'ચોપન', 'પંચાવન', 'છપ્પન', 'સત્તાવન', 'અઠ્ઠાવન', 'ઓગણસાઇઠ', 'સાઠ',
-  'એકસઠ', 'બાસઠ', 'ત્રેસઠ', 'ચોસઠ', 'પાંસઠ', 'છાસઠ', 'સડસઠ', 'આડસઠ', 'અગણોસિત્તેર', 'સિત્તેર',
-  'એકોતેર', 'બોતેર', 'તિલોતેર', 'ચૌમોતેર', 'પંચોતેર', 'છાંચોતેર', 'સિત્તોતેર', 'ઇઠ્ઠોતેર', 'ઓગણાએંસી', 'એંસી',
-  'એક્યાસી', 'બ્યાસી', 'ત્યાસી', 'ચોર્યાસી', 'પંચાસી', 'છ્યાસી', 'સિત્ત્યાસી', 'ઇઠ્ઠ્યાસી', 'નેવ્યાસી', 'નેવું',
-  'એકાણું', 'બાણું', 'ત્રાણું', 'ચોરાણું', 'પંચાણું', 'છન્નું', 'સત્તાણું', 'અઠ્ઠાણું', 'નવાણું', 'સો'
+  'એકવીસ', 'બાવીસ', 'તેવીસ', 'ચોવીસ', 'પચ્ચીસ', 'છવ્વીસ', 'સત્યાવીસ', 'અઠયાવીસ', 'ઓગણત્રીસ', 'ત્રીસ',
+  'એકત્રીસ', 'બત્રીસ', 'તેત્રીસ', 'ચોત્રીસ', 'પાંત્રીસ', 'છત્રીસ', 'સડત્રીસ', 'આડત્રીસ', 'ઓગણચાલીસ', 'ચાલીસ',
+  'એકતાળીસ', 'બેતાળીસ', 'ત્રેતાળીસ', 'ચુમ્માળીસ', 'પિસ્તાળીસ', 'છેતાળીસ', 'સુડતાળીસ', 'અડતાળીસ', 'ઓગણપચાસ', 'પચાસ',
+  'એકાવન', 'બાવન', 'ત્રેપન', 'ચોપન', 'પંચાવન', 'છપ્પન', 'સત્તાવન', 'અઠ્ઠાવન', 'ઓગણસાઇઠ', 'સાઇઠ',
+  'એકસઠ', 'બાસઠ', 'ત્રેસઠ', 'ચોસઠ', 'પાંસઠ', 'છાસઠ', 'સડસઠ', 'અડસઠ', 'ઓગણસિત્તેર', 'સિત્તેર',
+  'એકોતેર', 'બોતેર', 'ત્રોતેર', 'ચુમોતેર', 'પંચોતેર', 'છોતેર', 'સિત્યોતેર', 'ઈઠ્યોતેર', 'ઓગણએંસી', 'એંસી',
+  'એક્યાસી', 'બ્યાસી', 'ત્ર્યાસી', 'ચોર્યાસી', 'પંચ્યાસી', 'છ્યાસી', 'સત્યાસી', 'અઠ્યાસી', 'નેવ્યાસી', 'નેવું',
+  'એકાણું', 'બાણું', 'ત્રાણું', 'ચોરાણું', 'પંચાણું', 'છન્નું', 'સત્તાણું', 'અઠ્ઠાણું', 'નව્વાણું', 'સો'
 ];
 
 const GUJARATI_PHONETIC_WORDS = [
   'Shunya', 'Ek', 'Be', 'Tran', 'Chaar', 'Paanch', 'Chha', 'Saat', 'Aath', 'Nav', 'Das',
   'Agiyar', 'Baar', 'Ter', 'Chaud', 'Pandar', 'Sol', 'Sattar', 'Adhaar', 'Oganis', 'Vees',
-  'Ekvees', 'Bavees', 'Tevees', 'Chovees', 'Pachees', 'Chhavvees', 'Sattavees', 'Atthavees', 'Oganatrees', 'Trees',
-  'Ekatrees', 'Batrees', 'Tetrees', 'Chotrees', 'Paantrees', 'Chhatrees', 'Saadatrees', 'Aadatrees', 'Oganachalees', 'Chalees',
-  'Ekatalees', 'Betalees', 'Tretalees', 'Chomalees', 'Pistalees', 'Chhetalees', 'Sudtalees', 'Adtalees', 'Oganapachas', 'Pachas',
-  'Ekavan', 'Bavan', 'Trepan', 'Chopan', 'Panchavan', 'Chhappan', 'Sattavan', 'Atthavan', 'Oganasaith', 'Saath',
-  'Ekasath', 'Baasath', 'Tresath', 'Chosath', 'Paansath', 'Chhaasath', 'Sadasath', 'Aadasath', 'Aganositter', 'Sitter',
-  'Ekoter', 'Boter', 'Tiloter', 'Chaumoter', 'Panchoter', 'Chhaanchoter', 'Sittoter', 'Ithhoter', 'Oganaensee', 'Eensee',
-  'Ekyaasee', 'Byaasee', 'Tyaasee', 'Choryaasee', 'Panchasee', 'Chhyaasee', 'Sittyasee', 'Ithhyasee', 'Nevyaasee', 'Nevu',
-  'Ekaanu', 'Baanu', 'Traanu', 'Choraanu', 'Panchaanu', 'Chhannu', 'Sattaanu', 'Atthaanu', 'Nawaanu', 'So'
+  'Ekvees', 'Bavees', 'Tevees', 'Chovees', 'Pachchees', 'Chhavvees', 'Satyavees', 'Athayavees', 'Oganatrees', 'Trees',
+  'Ekatrees', 'Batrees', 'Tetrees', 'Chotrees', 'Paantrees', 'Chhatrees', 'Sadatrees', 'Aadatrees', 'Oganachalees', 'Chalees',
+  'Ekatalees', 'Betalees', 'Tretalees', 'Chummalees', 'Pistalees', 'Chhetalees', 'Sudtalees', 'Adtalees', 'Oganapachas', 'Pachas',
+  'Ekavan', 'Bavan', 'Trepan', 'Chopan', 'Panchavan', 'Chhappan', 'Sattavan', 'Atthavan', 'Oganasaith', 'Saith',
+  'Ekasath', 'Baasath', 'Tresath', 'Chosath', 'Paansath', 'Chhaasath', 'Sadasath', 'Adasath', 'Oganasitter', 'Sitter',
+  'Ekoter', 'Boter', 'Troter', 'Chumoter', 'Panchoter', 'Chhoter', 'Sityoter', 'Ithyoter', 'Oganaensee', 'Eensee',
+  'Ekyaasee', 'Byaasee', 'Tryasee', 'Choryaasee', 'Panchyasee', 'Chhyaasee', 'Satyasee', 'Athyasee', 'Nevyaasee', 'Nevu',
+  'Ekaanu', 'Baanu', 'Traanu', 'Choraanu', 'Panchaanu', 'Chhannu', 'Sattaanu', 'Atthaanu', 'Navvaanu', 'So'
 ];
 
 function toGujaratiNumeral(num: number): string {
