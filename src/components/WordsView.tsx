@@ -32,21 +32,14 @@ export default function WordsView({ onBack, autoSpeak }: WordsViewProps) {
     if (nextIndex < 0) nextIndex = ENGLISH_WORDS.length - 1;
     if (nextIndex >= ENGLISH_WORDS.length) nextIndex = 0;
     setIndex(nextIndex);
-
-    if (autoSpeak) {
-      const nextItem = ENGLISH_WORDS[nextIndex];
-      speakText(`${nextItem.letter} for ${nextItem.word}`, 'en', 0.82);
-    }
   };
 
   useEffect(() => {
-    if (autoSpeak) {
-      const timer = setTimeout(() => {
-        handleSpeak();
-      }, 350);
-      return () => clearTimeout(timer);
-    }
-  }, []); // Only speak first card on mount
+    const timer = setTimeout(() => {
+      handleSpeak();
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [index]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -133,9 +126,13 @@ export default function WordsView({ onBack, autoSpeak }: WordsViewProps) {
               </motion.div>
 
               {/* Large word label with letter match */}
-              <div className="text-center mt-2">
-                <span className="text-4xl font-extrabold opacity-75 mr-1 font-sans">{currentItem.letter} for</span>
-                <h3 className="text-5xl font-black tracking-tight">{currentItem.word}</h3>
+              <div className="flex items-center justify-center gap-2.5 sm:gap-4 mt-4 text-center whitespace-nowrap">
+                <span className={`text-6xl sm:text-7xl md:text-8xl font-black leading-none ${colorTheme.text}`}>
+                  {currentItem.letter}
+                </span>
+                <span className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
+                  For {currentItem.word}
+                </span>
               </div>
 
               {/* Speak indicator bar */}
