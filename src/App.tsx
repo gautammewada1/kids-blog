@@ -160,6 +160,7 @@ export default function App() {
               <motion.div key="future-room" className="w-full">
                 <FutureScopeView 
                   onBack={handleBackToHome} 
+                  setView={setView}
                 />
               </motion.div>
             )}
