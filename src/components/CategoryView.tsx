@@ -98,7 +98,7 @@ export default function CategoryView({ category, setView, onBack }: CategoryView
               <div className="text-6xl mb-4 filter drop-shadow">🔢</div>
               <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">English Numbers</h3>
               <p className="text-slate-500 dark:text-slate-400 text-sm text-center mb-4 leading-relaxed">
-                Learn to count 1 to 20 with gorgeous items and voice pronunciations!
+                Learn to count 0 to 100 with gorgeous items and voice pronunciations!
               </p>
               <span className="mt-auto flex items-center gap-1.5 text-pink-500 font-bold text-sm">
                 Let's Learn <ArrowRight size={16} />
@@ -134,7 +134,7 @@ export default function CategoryView({ category, setView, onBack }: CategoryView
               <div className="text-6xl mb-4 filter drop-shadow">૧️⃣</div>
               <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2 font-gujarati">ગુજરાતી અંકો</h3>
               <p className="text-slate-500 dark:text-slate-400 text-sm text-center mb-4 leading-relaxed font-gujarati">
-                ૧ થી ૨૦ સુધીના અંકો સચિત્ર ગણતરી અને ઓડિયો ઉચ્ચાર સાથે શીખો.
+                ૦ થી ૧૦૦ સુધીના અંકો સચિત્ર ગણતરી અને ઓડિયો ઉચ્ચાર સાથે શીખો.
               </p>
               <span className="mt-auto flex items-center gap-1.5 text-blue-500 font-bold text-sm">
                 શીખવા માટે ક્લિક કરો <ArrowRight size={16} />

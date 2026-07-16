@@ -109,51 +109,77 @@ export const GUJARATI_ALPHABET: GujaratiLetter[] = [
   { letter: 'જ્ઞ', englishPhonetic: 'Gnya', word: 'યજ્ઞ', wordEmoji: '🧠', wordEnglish: 'Sage', color: 'color-9' }
 ];
 
-export const ENGLISH_NUMBERS: EnglishNumberItem[] = [
-  { number: 1, word: 'One', emoji: '🍎', color: 'color-0' },
-  { number: 2, word: 'Two', emoji: '🎈', color: 'color-1' },
-  { number: 3, word: 'Three', emoji: '🚗', color: 'color-2' },
-  { number: 4, word: 'Four', emoji: '🐱', color: 'color-3' },
-  { number: 5, word: 'Five', emoji: '⭐', color: 'color-4' },
-  { number: 6, word: 'Six', emoji: '🐟', color: 'color-5' },
-  { number: 7, word: 'Seven', emoji: '🌻', color: 'color-6' },
-  { number: 8, word: 'Eight', emoji: '🧸', color: 'color-7' },
-  { number: 9, word: 'Nine', emoji: '🍦', color: 'color-8' },
-  { number: 10, word: 'Ten', emoji: '⚽', color: 'color-9' },
-  { number: 11, word: 'Eleven', emoji: '🦖', color: 'color-10' },
-  { number: 12, word: 'Twelve', emoji: '🧁', color: 'color-11' },
-  { number: 13, word: 'Thirteen', emoji: '🚀', color: 'color-0' },
-  { number: 14, word: 'Fourteen', emoji: '🍩', color: 'color-1' },
-  { number: 15, word: 'Fifteen', emoji: '🦋', color: 'color-2' },
-  { number: 16, word: 'Sixteen', emoji: '🍓', color: 'color-3' },
-  { number: 17, word: 'Seventeen', emoji: '🎨', color: 'color-4' },
-  { number: 18, word: 'Eighteen', emoji: '🦀', color: 'color-5' },
-  { number: 19, word: 'Nineteen', emoji: '🌈', color: 'color-6' },
-  { number: 20, word: 'Twenty', emoji: '🍀', color: 'color-7' }
+function numberToEnglishWord(num: number): string {
+  if (num === 0) return 'ZERO';
+  const ones = [
+    '', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE',
+    'TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN', 'FOURTEEN', 'FIFTEEN', 'SIXTEEN',
+    'SEVENTEEN', 'EIGHTEEN', 'NINETEEN'
+  ];
+  const tens = [
+    '', '', 'TWENTY', 'THIRTY', 'FORTY', 'FIFTY', 'SIXTY', 'SEVENTY', 'EIGHTY', 'NINETY'
+  ];
+
+  if (num === 100) return 'ONE HUNDRED';
+  if (num < 20) return ones[num];
+  
+  const tenVal = Math.floor(num / 10);
+  const oneVal = num % 10;
+  if (oneVal === 0) return tens[tenVal];
+  return `${tens[tenVal]}-${ones[oneVal]}`;
+}
+
+const KID_EMOJIS = [
+  '🍎', '🎈', '🚗', '🐱', '⭐', '🐟', '🌻', '🧸', '🍦', '⚽', '🦖', '🧁', '🚀', '🍩', '🦋', '🍓', '🎨', '🦀', '🌈', '🍀',
+  '🍕', '🍰', '🦁', '🦉', '🦊', '🦄', '🐝', '🐼', '🐨', '🐸', '🐙', '🦕', '🐬', '🍟', '🍭', '🍿', '🎲', '🎸', '✈️', '⚓'
 ];
 
-export const GUJARATI_NUMBERS: GujaratiNumberItem[] = [
-  { number: 1, gujaratiNumeral: '૧', word: 'એક', englishPhonetic: 'Ek', emoji: '🍎', color: 'color-0' },
-  { number: 2, gujaratiNumeral: '૨', word: 'બે', englishPhonetic: 'Be', emoji: '🎈', color: 'color-1' },
-  { number: 3, gujaratiNumeral: '૩', word: 'ત્રણ', englishPhonetic: 'Tran', emoji: '🚗', color: 'color-2' },
-  { number: 4, gujaratiNumeral: '૪', word: 'ચાર', englishPhonetic: 'Chaar', emoji: '🐱', color: 'color-3' },
-  { number: 5, gujaratiNumeral: '૫', word: 'પાંચ', englishPhonetic: 'Paanch', emoji: '⭐', color: 'color-4' },
-  { number: 6, gujaratiNumeral: '૬', word: 'છ', englishPhonetic: 'Chha', emoji: '🐟', color: 'color-5' },
-  { number: 7, gujaratiNumeral: '૭', word: 'સાત', englishPhonetic: 'Saat', emoji: '🌻', color: 'color-6' },
-  { number: 8, gujaratiNumeral: '૮', word: 'આઠ', englishPhonetic: 'Aath', emoji: '🧸', color: 'color-7' },
-  { number: 9, gujaratiNumeral: '૯', word: 'નવ', englishPhonetic: 'Nav', emoji: '🍦', color: 'color-8' },
-  { number: 10, gujaratiNumeral: '૧૦', word: 'દસ', englishPhonetic: 'Das', emoji: '⚽', color: 'color-9' },
-  { number: 11, gujaratiNumeral: '૧૧', word: 'અગિયાર', englishPhonetic: 'Agiyar', emoji: '🦖', color: 'color-10' },
-  { number: 12, gujaratiNumeral: '૧૨', word: 'બાર', englishPhonetic: 'Baar', emoji: '🧁', color: 'color-11' },
-  { number: 13, gujaratiNumeral: '૧૩', word: 'તેર', englishPhonetic: 'Ter', emoji: '🚀', color: 'color-0' },
-  { number: 14, gujaratiNumeral: '૧૪', word: 'ચૌદ', englishPhonetic: 'Chaud', emoji: '🍩', color: 'color-1' },
-  { number: 15, gujaratiNumeral: '૧૫', word: 'પંદર', englishPhonetic: 'Pandar', emoji: '🦋', color: 'color-2' },
-  { number: 16, gujaratiNumeral: '૧૬', word: 'સોળ', englishPhonetic: 'Sol', emoji: '🍓', color: 'color-3' },
-  { number: 17, gujaratiNumeral: '૧૭', word: 'સત્તર', englishPhonetic: 'Sattar', emoji: '🎨', color: 'color-4' },
-  { number: 18, gujaratiNumeral: '૧૮', word: 'અઢાર', englishPhonetic: 'Adhaar', emoji: '🦀', color: 'color-5' },
-  { number: 19, gujaratiNumeral: '૧૯', word: 'ઓગણીસ', englishPhonetic: 'Oganis', emoji: '🌈', color: 'color-6' },
-  { number: 20, gujaratiNumeral: '૨૦', word: 'વીસ', englishPhonetic: 'Vees', emoji: '🍀', color: 'color-7' }
+export const ENGLISH_NUMBERS: EnglishNumberItem[] = Array.from({ length: 101 }, (_, i) => ({
+  number: i,
+  word: numberToEnglishWord(i),
+  emoji: KID_EMOJIS[i % KID_EMOJIS.length],
+  color: `color-${i % 12}`
+}));
+
+const GUJARATI_NUM_WORDS = [
+  'શૂન્ય', 'એક', 'બે', 'ત્રણ', 'ચાર', 'પાંચ', 'છ', 'સાત', 'આઠ', 'નવ', 'દસ',
+  'અગિયાર', 'બાર', 'તેર', 'ચૌદ', 'પંદર', 'સોળ', 'સત્તર', 'અઢાર', 'ઓગણીસ', 'વીસ',
+  'એકવીસ', 'બાવીસ', 'તેવીસ', 'ચોવીસ', 'પચીસ', 'છવ્વીસ', 'સત્તાવીસ', 'અઠ્ઠાવીસ', 'ઓગણત્રીસ', 'ત્રીસ',
+  'એકત્રીસ', 'બત્રીસ', 'તેત્રીસ', 'ચોત્રીસ', 'પાંત્રીસ', 'છત્રીસ', 'સાડત્રીસ', 'આડત્રીસ', 'ઓગણચાળીસ', 'ચાલીસ',
+  'એકતાલીસ', 'બેતાલીસ', 'ત્રેતાલીસ', 'ચોમાલીસ', 'પિસ્તાલીસ', 'છેતાલીસ', 'સુડતાલીસ', 'અડતાલીસ', 'ઓગણપચાસ', 'પચાસ',
+  'એકાવન', 'બાવન', 'ત્રેપન', 'ચોપન', 'પંચાવન', 'છપ્પન', 'સત્તાવન', 'અઠ્ઠાવન', 'ઓગણસાઇઠ', 'સાઠ',
+  'એકસઠ', 'બાસઠ', 'ત્રેસઠ', 'ચોસઠ', 'પાંસઠ', 'છાસઠ', 'સડસઠ', 'આડસઠ', 'અગણોસિત્તેર', 'સિત્તેર',
+  'એકોતેર', 'બોતેર', 'તિલોતેર', 'ચૌમોતેર', 'પંચોતેર', 'છાંચોતેર', 'સિત્તોતેર', 'ઇઠ્ઠોતેર', 'ઓગણાએંસી', 'એંસી',
+  'એક્યાસી', 'બ્યાસી', 'ત્યાસી', 'ચોર્યાસી', 'પંચાસી', 'છ્યાસી', 'સિત્ત્યાસી', 'ઇઠ્ઠ્યાસી', 'નેવ્યાસી', 'નેવું',
+  'એકાણું', 'બાણું', 'ત્રાણું', 'ચોરાણું', 'પંચાણું', 'છન્નું', 'સત્તાણું', 'અઠ્ઠાણું', 'નવાણું', 'સો'
 ];
+
+const GUJARATI_PHONETIC_WORDS = [
+  'Shunya', 'Ek', 'Be', 'Tran', 'Chaar', 'Paanch', 'Chha', 'Saat', 'Aath', 'Nav', 'Das',
+  'Agiyar', 'Baar', 'Ter', 'Chaud', 'Pandar', 'Sol', 'Sattar', 'Adhaar', 'Oganis', 'Vees',
+  'Ekvees', 'Bavees', 'Tevees', 'Chovees', 'Pachees', 'Chhavvees', 'Sattavees', 'Atthavees', 'Oganatrees', 'Trees',
+  'Ekatrees', 'Batrees', 'Tetrees', 'Chotrees', 'Paantrees', 'Chhatrees', 'Saadatrees', 'Aadatrees', 'Oganachalees', 'Chalees',
+  'Ekatalees', 'Betalees', 'Tretalees', 'Chomalees', 'Pistalees', 'Chhetalees', 'Sudtalees', 'Adtalees', 'Oganapachas', 'Pachas',
+  'Ekavan', 'Bavan', 'Trepan', 'Chopan', 'Panchavan', 'Chhappan', 'Sattavan', 'Atthavan', 'Oganasaith', 'Saath',
+  'Ekasath', 'Baasath', 'Tresath', 'Chosath', 'Paansath', 'Chhaasath', 'Sadasath', 'Aadasath', 'Aganositter', 'Sitter',
+  'Ekoter', 'Boter', 'Tiloter', 'Chaumoter', 'Panchoter', 'Chhaanchoter', 'Sittoter', 'Ithhoter', 'Oganaensee', 'Eensee',
+  'Ekyaasee', 'Byaasee', 'Tyaasee', 'Choryaasee', 'Panchasee', 'Chhyaasee', 'Sittyasee', 'Ithhyasee', 'Nevyaasee', 'Nevu',
+  'Ekaanu', 'Baanu', 'Traanu', 'Choraanu', 'Panchaanu', 'Chhannu', 'Sattaanu', 'Atthaanu', 'Nawaanu', 'So'
+];
+
+function toGujaratiNumeral(num: number): string {
+  const gujaratiDigits = ['૦', '૧', '૨', '૩', '૪', '૫', '૬', '૭', '૮', '૯'];
+  return num.toString().split('').map(digit => gujaratiDigits[parseInt(digit, 10)]).join('');
+}
+
+export const GUJARATI_NUMBERS: GujaratiNumberItem[] = Array.from({ length: 101 }, (_, i) => ({
+  number: i,
+  gujaratiNumeral: toGujaratiNumeral(i),
+  word: GUJARATI_NUM_WORDS[i],
+  englishPhonetic: GUJARATI_PHONETIC_WORDS[i],
+  emoji: KID_EMOJIS[i % KID_EMOJIS.length],
+  color: `color-${i % 12}`
+}));
 
 export const FUTURE_SECTIONS = [
   { id: 'gujarati-words', title: 'Gujarati Words', emoji: '📖', category: 'Gujarati', desc: 'Learn common words for Gujarati alphabets.' },

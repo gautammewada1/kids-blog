@@ -86,7 +86,7 @@ export default function GujaratiNumbersView({ onBack, autoSpeak }: GujaratiNumbe
       {/* Title */}
       <div className="text-center mb-6">
         <h2 className="text-3xl font-extrabold text-slate-800 dark:text-white mb-1 font-gujarati">
-          ગુજરાતી અંકો (૧ થી ૨૦)
+          ગુજરાતી અંકો (૦ થી ૧૦૦)
         </h2>
         <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">
           મજાના ચિત્રો ગણો અને ગુજરાતી અંકોના સાચા ઉચ્ચાર શીખો!
@@ -120,7 +120,7 @@ export default function GujaratiNumbersView({ onBack, autoSpeak }: GujaratiNumbe
             >
               {/* Card Index Indicator */}
               <div className="absolute top-6 right-8 font-bold text-sm tracking-widest uppercase opacity-75">
-                {index + 1} / 20
+                {index} / 100
               </div>
 
               {/* Number mapping in top-left */}
@@ -131,13 +131,13 @@ export default function GujaratiNumbersView({ onBack, autoSpeak }: GujaratiNumbe
               {/* Dynamic Emoji Counting Grid */}
               <div className="flex-1 flex flex-col items-center justify-center w-full mt-6 mb-2">
                 <div className="flex flex-wrap items-center justify-center max-w-[280px] select-none pointer-events-none">
-                  {Array.from({ length: currentItem.number }).map((_, i) => (
+                  {Array.from({ length: Math.min(currentItem.number, 20) }).map((_, i) => (
                     <motion.span
                       key={i}
                       initial={{ scale: 0, rotate: -20 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={{ 
-                        delay: Math.min(i * 0.04, 0.6), 
+                        delay: Math.min(i * 0.04, 0.4), 
                         type: 'spring', 
                         stiffness: 260, 
                         damping: 15 
@@ -147,6 +147,15 @@ export default function GujaratiNumbersView({ onBack, autoSpeak }: GujaratiNumbe
                       {currentItem.emoji}
                     </motion.span>
                   ))}
+                  {currentItem.number > 20 && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="text-lg font-black bg-white/80 dark:bg-slate-800/80 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 ml-1.5 shadow-sm text-slate-700 dark:text-slate-300"
+                    >
+                      + {currentItem.number - 20}
+                    </motion.span>
+                  )}
                 </div>
               </div>
 

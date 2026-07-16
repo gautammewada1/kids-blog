@@ -22,7 +22,7 @@ export default function EnglishNumbersView({ onBack, autoSpeak }: EnglishNumbers
   const colorTheme = KID_COLORS[index % KID_COLORS.length];
 
   const handleSpeak = () => {
-    speakText(`Number ${currentItem.number}, ${currentItem.word}`, 'en', 0.82);
+    speakText(currentItem.word, 'en', 0.82);
   };
 
   const changeCard = (dir: number) => {
@@ -34,7 +34,7 @@ export default function EnglishNumbersView({ onBack, autoSpeak }: EnglishNumbers
 
     if (autoSpeak) {
       const nextItem = ENGLISH_NUMBERS[nextIndex];
-      speakText(`Number ${nextItem.number}, ${nextItem.word}`, 'en', 0.82);
+      speakText(nextItem.word, 'en', 0.82);
     }
   };
 
@@ -86,7 +86,7 @@ export default function EnglishNumbersView({ onBack, autoSpeak }: EnglishNumbers
       {/* Title */}
       <div className="text-center mb-6">
         <h2 className="text-3xl font-extrabold text-slate-800 dark:text-white mb-1">
-          English Numbers (1 to 20)
+          English Numbers (0 to 100)
         </h2>
         <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">
           Count the friendly items inside the card and hear their pronunciations!
@@ -120,24 +120,24 @@ export default function EnglishNumbersView({ onBack, autoSpeak }: EnglishNumbers
             >
               {/* Card Index Indicator */}
               <div className="absolute top-6 right-8 font-bold text-sm tracking-widest uppercase opacity-75">
-                {index + 1} / 20
+                {index} / 100
               </div>
 
               {/* Large Numeral in top-left */}
               <div className="absolute top-5 left-8 text-5xl font-black font-sans opacity-30">
-                #{currentItem.number}
+                {currentItem.number}
               </div>
 
               {/* Dynamic Emoji Counting Grid */}
               <div className="flex-1 flex flex-col items-center justify-center w-full mt-6 mb-2">
                 <div className="flex flex-wrap items-center justify-center max-w-[280px] select-none pointer-events-none">
-                  {Array.from({ length: currentItem.number }).map((_, i) => (
+                  {Array.from({ length: Math.min(currentItem.number, 20) }).map((_, i) => (
                     <motion.span
                       key={i}
                       initial={{ scale: 0, rotate: -20 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={{ 
-                        delay: Math.min(i * 0.04, 0.6), 
+                        delay: Math.min(i * 0.04, 0.4), 
                         type: 'spring', 
                         stiffness: 260, 
                         damping: 15 
@@ -147,6 +147,15 @@ export default function EnglishNumbersView({ onBack, autoSpeak }: EnglishNumbers
                       {currentItem.emoji}
                     </motion.span>
                   ))}
+                  {currentItem.number > 20 && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="text-lg font-black bg-white/80 dark:bg-slate-800/80 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 ml-1.5 shadow-sm text-slate-700 dark:text-slate-300"
+                    >
+                      + {currentItem.number - 20}
+                    </motion.span>
+                  )}
                 </div>
               </div>
 
