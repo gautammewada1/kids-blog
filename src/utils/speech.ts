@@ -4,6 +4,12 @@
  */
 
 import { ENGLISH_NUMBERS, GUJARATI_ALPHABET, GUJARATI_NUMBERS } from '../data';
+import { AUDIO_FILES } from '../audio-manifest';
+
+// Build a fast lookup table at startup
+const availableAudioSet = new Set<string>(
+  AUDIO_FILES.map(path => path.replace(/\\/g, '/').toLowerCase())
+);
 
 // Keep track of the last requested speech to prevent queue build-up and handle autoplay unlocking
 let lastRequestedSpeech: {
@@ -20,30 +26,141 @@ let voicesList: SpeechSynthesisVoice[] = [];
 // Keep track of the currently playing Audio instance to stop it before playing a new one.
 let currentAudio: HTMLAudioElement | null = null;
 
-// Cache to store file existence results to avoid redundant network checks.
-const fileExistsCache = new Map<string, boolean>();
-
 /**
- * Checks if a file exists at the given path by sending a fast HEAD request, with a GET fallback.
+ * Diagnostic logger to verify available files across categories.
+ * Prints loaded stats and lists any missing canonical files.
  */
-async function checkFileExists(url: string): Promise<boolean> {
-  if (fileExistsCache.has(url)) {
-    return fileExistsCache.get(url)!;
-  }
-  try {
-    const response = await fetch(url, { method: 'HEAD' });
-    if (response.ok) {
-      fileExistsCache.set(url, true);
-      return true;
+function initializeAudioUploadManager() {
+  const missingFiles: string[] = [];
+
+  // 1. English Alphabet (26 items: A-Z)
+  let englishAlphabetCount = 0;
+  for (let i = 0; i < 26; i++) {
+    const letter = String.fromCharCode(65 + i);
+    const canonical = `public/audio/english/alphabet/${letter}.mp3`;
+    const canonicalLower = `public/audio/english/alphabet/${letter.toLowerCase()}.mp3`;
+
+    if (availableAudioSet.has(canonical.toLowerCase()) || availableAudioSet.has(canonicalLower.toLowerCase())) {
+      englishAlphabetCount++;
+    } else {
+      missingFiles.push(canonical);
     }
-    // Fallback to GET in case HEAD is not supported by the hosting server
-    const responseGet = await fetch(url);
-    const exists = responseGet.ok;
-    fileExistsCache.set(url, exists);
-    return exists;
-  } catch (err) {
-    fileExistsCache.set(url, false);
-    return false;
+  }
+
+  // 2. English Words (26 items)
+  let englishWordsCount = 0;
+  const wordItems = [
+    'Apple', 'Ball', 'Cat', 'Dog', 'Elephant', 'Fish', 'Grapes', 'Horse', 'Ice Cream', 'Jellyfish', 'Kite', 'Lion',
+    'Monkey', 'Nest', 'Orange', 'Parrot', 'Queen', 'Rabbit', 'Sun', 'Tiger', 'Umbrella', 'Violin', 'Watermelon',
+    'Xylophone', 'Yak', 'Zebra'
+  ];
+  wordItems.forEach((word, index) => {
+    const letter = String.fromCharCode(65 + index);
+    const wordClean = word.replace(/\s+/g, '_');
+    const canonical = `public/audio/english/words/${wordClean}.mp3`;
+
+    // Check possible variations
+    const check1 = `public/audio/english/words/${wordClean}.mp3`;
+    const check2 = `public/audio/english/words/${wordClean.toLowerCase()}.mp3`;
+    const check3 = `public/audio/english/words/${letter.toLowerCase()}_for_${wordClean.toLowerCase()}.mp3`;
+    const check4 = `public/audio/english/words/${letter.toUpperCase()}_for_${wordClean}.mp3`;
+
+    if (
+      availableAudioSet.has(check1.toLowerCase()) ||
+      availableAudioSet.has(check2.toLowerCase()) ||
+      availableAudioSet.has(check3.toLowerCase()) ||
+      availableAudioSet.has(check4.toLowerCase())
+    ) {
+      englishWordsCount++;
+    } else {
+      missingFiles.push(canonical);
+    }
+  });
+
+  // 3. English Numbers (101 items: 0 to 100)
+  let englishNumbersCount = 0;
+  for (let i = 0; i <= 100; i++) {
+    const canonical = `public/audio/english/numbers/${i}.mp3`;
+    if (availableAudioSet.has(canonical.toLowerCase())) {
+      englishNumbersCount++;
+    } else {
+      missingFiles.push(canonical);
+    }
+  }
+
+  // 4. Gujarati Alphabet (48 items: 12 vowels + 36 consonants)
+  let gujaratiAlphabetCount = 0;
+  GUJARATI_ALPHABET.forEach(item => {
+    const canonical = `public/audio/gujarati/alphabet/${item.englishPhonetic}.mp3`;
+
+    const check1 = `public/audio/gujarati/alphabet/${item.englishPhonetic}.mp3`;
+    const check2 = `public/audio/gujarati/alphabet/${item.englishPhonetic.toLowerCase()}.mp3`;
+    const check3 = `public/audio/gujarati/alphabet/${item.letter}.mp3`;
+    const check4 = `public/audio/gujarati/alphabet/${item.wordEnglish.toLowerCase().replace(/\s+/g, '_')}.mp3`;
+
+    if (
+      availableAudioSet.has(check1.toLowerCase()) ||
+      availableAudioSet.has(check2.toLowerCase()) ||
+      availableAudioSet.has(check3.toLowerCase()) ||
+      availableAudioSet.has(check4.toLowerCase())
+    ) {
+      gujaratiAlphabetCount++;
+    } else {
+      missingFiles.push(canonical);
+    }
+  });
+
+  // 5. Gujarati Numbers (101 items: 0 to 100)
+  let gujaratiNumbersCount = 0;
+  for (let i = 0; i <= 100; i++) {
+    const canonical = `public/audio/gujarati/numbers/${i}.mp3`;
+    if (availableAudioSet.has(canonical.toLowerCase())) {
+      gujaratiNumbersCount++;
+    } else {
+      missingFiles.push(canonical);
+    }
+  }
+
+  // 6. Gujarati Barakhadi (432 items: 36 consonants * 12 vowel sounds)
+  let gujaratiBarakhadiCount = 0;
+  const consonants = GUJARATI_ALPHABET.slice(12);
+  const VOWEL_SIGNS = ['', 'ા', 'િ', 'ી', 'ુ', 'ૂ', 'ે', 'ૈ', 'ો', 'ૌ', 'ં', 'ઃ'];
+  const PHONETIC_SUFFIXES = ['a', 'aa', 'i', 'ee', 'u', 'oo', 'e', 'ai', 'o', 'au', 'am', 'aha'];
+
+  consonants.forEach(consonant => {
+    VOWEL_SIGNS.forEach((sign, idx) => {
+      const letter = consonant.letter + sign;
+      let stem = consonant.englishPhonetic;
+      if (stem.endsWith('a')) {
+        stem = stem.slice(0, -1);
+      }
+      const phonetic = stem + PHONETIC_SUFFIXES[idx];
+      const canonical = `public/audio/gujarati/barakhadi/${phonetic.toLowerCase()}.mp3`;
+
+      const check1 = `public/audio/gujarati/barakhadi/${letter}.mp3`;
+      const check2 = `public/audio/gujarati/barakhadi/${phonetic.toLowerCase()}.mp3`;
+
+      if (availableAudioSet.has(check1.toLowerCase()) || availableAudioSet.has(check2.toLowerCase())) {
+        gujaratiBarakhadiCount++;
+      } else {
+        missingFiles.push(canonical);
+      }
+    });
+  });
+
+  // Print results strictly according to browser console requirements
+  console.log(
+    `Loaded audio files:\n` +
+    `- English Alphabet: ${englishAlphabetCount}/26\n` +
+    `- English Words: ${englishWordsCount}/26\n` +
+    `- English Numbers: ${englishNumbersCount}/101\n` +
+    `- Gujarati Alphabet: ${gujaratiAlphabetCount}/48\n` +
+    `- Gujarati Numbers: ${gujaratiNumbersCount}/101\n` +
+    `- Gujarati Barakhadi: ${gujaratiBarakhadiCount}/432`
+  );
+
+  if (missingFiles.length > 0) {
+    console.log('Missing:\n' + missingFiles.join('\n'));
   }
 }
 
@@ -303,16 +420,15 @@ export async function speakText(
   // Resolve potential local MP3 audio paths
   const possiblePaths = getPossibleAudioPaths(text, lang, englishPhoneticFallback);
 
-  // Check which MP3 file exists first (sequentially, respecting priority)
+  // Check which MP3 file exists first (sequentially, respecting lookup table)
   let matchedPath: string | null = null;
   for (const path of possiblePaths) {
-    const exists = await checkFileExists(path);
-    // If a newer speech request has been registered in the meantime, abort this stale thread immediately
-    if (lastRequestedSpeech?.text !== text) {
-      return;
+    let cleanPath = path.replace(/\\/g, '/');
+    if (cleanPath.startsWith('/')) {
+      cleanPath = 'public' + cleanPath;
     }
-    if (exists) {
-      matchedPath = path;
+    if (availableAudioSet.has(cleanPath.toLowerCase())) {
+      matchedPath = cleanPath.startsWith('public/') ? cleanPath.substring(6) : cleanPath;
       break;
     }
   }
@@ -416,6 +532,9 @@ if (typeof window !== 'undefined' && window.speechSynthesis) {
   // Warm up voices
   window.speechSynthesis.getVoices();
   ensureVoices();
+
+  // Run the diagnostics & load metrics at startup
+  initializeAudioUploadManager();
 
   // Listen to any interaction anywhere to unlock speech
   document.addEventListener('click', unlockSpeechSynthesis, { capture: true, passive: true });
