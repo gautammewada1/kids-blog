@@ -391,30 +391,14 @@ function findBestVoice(lang: 'en' | 'gu', voices: SpeechSynthesisVoice[]): Speec
   }
 }
 
-/**
- * Dynamically resolves the full URL of an asset, supporting local development,
- * custom server environments, and nested subdirectories (such as GitHub Pages deployment).
- */
+const AUDIO_BASE_URL = "https://gautammewada1.github.io/kids-blog/";
+
 function getResolvedUrl(matchedPath: string): string {
-  if (typeof window === 'undefined') {
-    return matchedPath;
-  }
+  const cleanPath = matchedPath.startsWith("/")
+    ? matchedPath.substring(1)
+    : matchedPath;
 
-  const pathname = window.location.pathname;
-  let baseDir = '/';
-  if (pathname.includes('.')) {
-    // E.g., "/kids-blog/index.html" -> "/kids-blog/"
-    baseDir = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-  } else {
-    // E.g., "/kids-blog" -> "/kids-blog/"
-    baseDir = pathname.endsWith('/') ? pathname : pathname + '/';
-  }
-
-  const cleanBase = baseDir.endsWith('/') ? baseDir : baseDir + '/';
-  const cleanPath = matchedPath.startsWith('/') ? matchedPath.substring(1) : matchedPath;
-  const combined = cleanBase + cleanPath;
-
-  return new URL(combined.replace(/\/+/g, '/'), window.location.origin).href;
+  return new URL(cleanPath, AUDIO_BASE_URL).href;
 }
 
 /**
