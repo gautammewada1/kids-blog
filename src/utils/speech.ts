@@ -11,6 +11,14 @@ const availableAudioSet = new Set<string>(
   AUDIO_FILES.map(path => path.replace(/\\/g, '/').toLowerCase())
 );
 
+// Map lowercase path to the original-cased path for exact case-sensitive retrieval
+const availableAudioMap = new Map<string, string>(
+  AUDIO_FILES.map(path => {
+    const clean = path.replace(/\\/g, '/');
+    return [clean.toLowerCase(), clean];
+  })
+);
+
 // Keep track of the last requested speech to prevent queue build-up and handle autoplay unlocking
 let lastRequestedSpeech: {
   text: string;
@@ -427,8 +435,9 @@ export async function speakText(
     if (cleanPath.startsWith('/')) {
       cleanPath = 'public' + cleanPath;
     }
-    if (availableAudioSet.has(cleanPath.toLowerCase())) {
-      matchedPath = cleanPath.startsWith('public/') ? cleanPath.substring(6) : cleanPath;
+    const originalPath = availableAudioMap.get(cleanPath.toLowerCase());
+    if (originalPath) {
+      matchedPath = originalPath.startsWith('public/') ? originalPath.substring(6) : originalPath;
       break;
     }
   }
