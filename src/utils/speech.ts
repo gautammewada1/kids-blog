@@ -471,7 +471,7 @@ export async function speakText(
               resolve();
             })
             .catch((err) => {
-              console.error(`[Audio System] HTML5 Audio play() failed for URL ${resolvedUrl}:`, err);
+              console.warn(`[Audio System] HTML5 Audio play() failed for URL ${resolvedUrl}:`, err);
               reject(err);
             });
         };
@@ -479,7 +479,7 @@ export async function speakText(
         const onError = (e: Event) => {
           const mediaError = audio.error;
           const errMsg = `HTML5 Audio Element error for URL ${resolvedUrl}: Code=${mediaError?.code || 'unknown'}, Message=${mediaError?.message || 'none'}`;
-          console.error(`[Audio System] ${errMsg}`, e);
+          console.warn(`[Audio System] ${errMsg}`, e);
           reject(new Error(errMsg));
         };
 
@@ -572,7 +572,7 @@ export function unlockSpeechSynthesis() {
       speakText(text, lang, rate, englishPhoneticFallback);
     }
   } catch (e) {
-    console.error('Failed to unlock SpeechSynthesis:', e);
+    console.warn('Failed to unlock SpeechSynthesis:', e);
   }
 }
 
