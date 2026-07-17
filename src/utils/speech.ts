@@ -435,13 +435,45 @@ export async function speakText(
 
   // If a local MP3 exists, play it!
   if (matchedPath) {
+    let baseUrl = (import.meta as any).env?.BASE_URL || '/';
+    if (baseUrl === './') {
+      baseUrl = '/';
+    }
+    const combinedPath = (baseUrl + '/' + matchedPath).replace(/\/+/g, '/');
+    const resolvedUrl = new URL(combinedPath, window.location.origin).href;
+
+    console.log(`[Audio System] Playback requested for local MP3. Resolved URL: ${resolvedUrl}`);
+
     try {
-      const audio = new Audio(matchedPath);
+      // Perform a non-blocking HEAD request to verify file accessibility and capture status codes
+      fetch(resolvedUrl, { method: 'HEAD' })
+        .then(res => {
+          console.log(`[Audio System] HTTP status for ${resolvedUrl}: ${res.status} ${res.statusText}`);
+          if (!res.ok) {
+            console.error(`[Audio System] Failed to load audio file over HTTP (Status ${res.status}). File might be missing or inaccessible.`);
+          }
+        })
+        .catch(err => {
+          console.error(`[Audio System] Network check failed for ${resolvedUrl}:`, err);
+        });
+
+      const audio = new Audio(resolvedUrl);
       currentAudio = audio;
+
+      audio.addEventListener('error', (e) => {
+        const mediaError = audio.error;
+        console.error(`[Audio System] HTML5 Audio Element error for URL ${resolvedUrl}:`, {
+          code: mediaError?.code,
+          message: mediaError?.message,
+          event: e
+        });
+      });
+
       await audio.play();
+      console.log(`[Audio System] Playback started successfully for ${resolvedUrl}`);
       return; // Played successfully!
     } catch (err) {
-      console.warn(`Local MP3 found at ${matchedPath} but playback was blocked/failed:`, err);
+      console.warn(`Local MP3 found at ${resolvedUrl} but playback was blocked/failed:`, err);
       if (lastRequestedSpeech?.text !== text) {
         return;
       }
