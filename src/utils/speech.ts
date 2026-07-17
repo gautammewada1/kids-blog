@@ -392,6 +392,32 @@ function findBestVoice(lang: 'en' | 'gu', voices: SpeechSynthesisVoice[]): Speec
 }
 
 /**
+ * Dynamically resolves the full URL of an asset, supporting local development,
+ * custom server environments, and nested subdirectories (such as GitHub Pages deployment).
+ */
+function getResolvedUrl(matchedPath: string): string {
+  if (typeof window === 'undefined') {
+    return matchedPath;
+  }
+
+  const pathname = window.location.pathname;
+  let baseDir = '/';
+  if (pathname.includes('.')) {
+    // E.g., "/kids-blog/index.html" -> "/kids-blog/"
+    baseDir = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+  } else {
+    // E.g., "/kids-blog" -> "/kids-blog/"
+    baseDir = pathname.endsWith('/') ? pathname : pathname + '/';
+  }
+
+  const cleanBase = baseDir.endsWith('/') ? baseDir : baseDir + '/';
+  const cleanPath = matchedPath.startsWith('/') ? matchedPath.substring(1) : matchedPath;
+  const combined = cleanBase + cleanPath;
+
+  return new URL(combined.replace(/\/+/g, '/'), window.location.origin).href;
+}
+
+/**
  * Speaks the requested text using either a matching local MP3 audio file,
  * or native browser SpeechSynthesis as a fallback.
  * Ensures no overlap, stops prior playbacks, and supports offline-safe asset serving.
@@ -444,45 +470,70 @@ export async function speakText(
 
   // If a local MP3 exists, play it!
   if (matchedPath) {
-    let baseUrl = (import.meta as any).env?.BASE_URL || '/';
-    if (baseUrl === './') {
-      baseUrl = '/';
-    }
-    const combinedPath = (baseUrl + '/' + matchedPath).replace(/\/+/g, '/');
-    const resolvedUrl = new URL(combinedPath, window.location.origin).href;
+    const resolvedUrl = getResolvedUrl(matchedPath);
 
     console.log(`[Audio System] Playback requested for local MP3. Resolved URL: ${resolvedUrl}`);
 
     try {
-      // Perform a non-blocking HEAD request to verify file accessibility and capture status codes
-      fetch(resolvedUrl, { method: 'HEAD' })
-        .then(res => {
-          console.log(`[Audio System] HTTP status for ${resolvedUrl}: ${res.status} ${res.statusText}`);
-          if (!res.ok) {
-            console.error(`[Audio System] Failed to load audio file over HTTP (Status ${res.status}). File might be missing or inaccessible.`);
-          }
-        })
-        .catch(err => {
-          console.error(`[Audio System] Network check failed for ${resolvedUrl}:`, err);
-        });
+      // 1. Fetch the file as a Blob to ensure we bypass Range header and OS media player session cookie issues.
+      // This also allows us to clearly capture HTTP error statuses (like 404, 401, 403, 500).
+      const response = await fetch(resolvedUrl);
+      
+      console.log(`[Audio System] HTTP status for ${resolvedUrl}: ${response.status} ${response.statusText}`);
+      
+      if (!response.ok) {
+        console.error(`[Audio System] Failed to load audio file over HTTP (Status ${response.status} ${response.statusText}). URL: ${resolvedUrl}`);
+        throw new Error(`HTTP_${response.status}_${response.statusText}`);
+      }
 
-      const audio = new Audio(resolvedUrl);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      console.log(`[Audio System] Blob loaded successfully for ${resolvedUrl}. Creating Audio element.`);
+
+      const audio = new Audio(blobUrl);
       currentAudio = audio;
 
-      audio.addEventListener('error', (e) => {
-        const mediaError = audio.error;
-        console.error(`[Audio System] HTML5 Audio Element error for URL ${resolvedUrl}:`, {
-          code: mediaError?.code,
-          message: mediaError?.message,
-          event: e
-        });
+      // Handle cleaning up the object URL after use
+      const cleanup = () => {
+        try {
+          URL.revokeObjectURL(blobUrl);
+        } catch (e) {}
+      };
+
+      audio.addEventListener('ended', cleanup);
+
+      const playPromise = new Promise<void>((resolve, reject) => {
+        // Prepare events
+        const onCanPlay = () => {
+          audio.play()
+            .then(() => {
+              console.log(`[Audio System] Playback started successfully for ${resolvedUrl}`);
+              resolve();
+            })
+            .catch((err) => {
+              cleanup();
+              console.error(`[Audio System] HTML5 Audio play() failed for URL ${resolvedUrl}:`, err);
+              reject(err);
+            });
+        };
+
+        const onError = (e: Event) => {
+          cleanup();
+          const mediaError = audio.error;
+          const errMsg = `HTML5 Audio Element error for URL ${resolvedUrl}: Code=${mediaError?.code || 'unknown'}, Message=${mediaError?.message || 'none'}`;
+          console.error(`[Audio System] ${errMsg}`, e);
+          reject(new Error(errMsg));
+        };
+
+        audio.addEventListener('canplaythrough', onCanPlay, { once: true });
+        audio.addEventListener('error', onError, { once: true });
       });
 
-      await audio.play();
-      console.log(`[Audio System] Playback started successfully for ${resolvedUrl}`);
+      await playPromise;
       return; // Played successfully!
     } catch (err) {
-      console.warn(`Local MP3 found at ${resolvedUrl} but playback was blocked/failed:`, err);
+      console.warn(`[Audio System] Local MP3 playback failed at ${resolvedUrl}. Falling back to SpeechSynthesis:`, err);
       if (lastRequestedSpeech?.text !== text) {
         return;
       }
