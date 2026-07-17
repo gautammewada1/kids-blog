@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ENGLISH_NUMBERS, GUJARATI_ALPHABET, GUJARATI_NUMBERS } from '../data';
+
 // Keep track of the last requested speech to prevent queue build-up and handle autoplay unlocking
 let lastRequestedSpeech: {
   text: string;
@@ -14,6 +16,131 @@ let lastRequestedSpeech: {
 let isSpeechSynthesisUnlocked = false;
 let voicesLoaded = false;
 let voicesList: SpeechSynthesisVoice[] = [];
+
+// Keep track of the currently playing Audio instance to stop it before playing a new one.
+let currentAudio: HTMLAudioElement | null = null;
+
+// Cache to store file existence results to avoid redundant network checks.
+const fileExistsCache = new Map<string, boolean>();
+
+/**
+ * Checks if a file exists at the given path by sending a fast HEAD request, with a GET fallback.
+ */
+async function checkFileExists(url: string): Promise<boolean> {
+  if (fileExistsCache.has(url)) {
+    return fileExistsCache.get(url)!;
+  }
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    if (response.ok) {
+      fileExistsCache.set(url, true);
+      return true;
+    }
+    // Fallback to GET in case HEAD is not supported by the hosting server
+    const responseGet = await fetch(url);
+    const exists = responseGet.ok;
+    fileExistsCache.set(url, exists);
+    return exists;
+  } catch (err) {
+    fileExistsCache.set(url, false);
+    return false;
+  }
+}
+
+/**
+ * Helper to resolve possible local MP3 paths for the given speech parameters.
+ */
+function getPossibleAudioPaths(
+  text: string,
+  lang: 'en' | 'gu',
+  englishPhoneticFallback?: string
+): string[] {
+  const paths: string[] = [];
+  const cleanText = text.trim();
+
+  if (lang === 'en') {
+    // 1. English Alphabet
+    if (/^[A-Za-z]$/.test(cleanText)) {
+      const letterLower = cleanText.toLowerCase();
+      paths.push(`/audio/english/alphabet/${letterLower}.mp3`);
+      paths.push(`/audio/english/alphabet/${cleanText.toUpperCase()}.mp3`);
+    }
+
+    // 2. English Words (e.g. "A for Apple" or "Apple")
+    const forMatch = cleanText.match(/^([A-Za-z])\s+for\s+(.+)$/i);
+    if (forMatch) {
+      const letter = forMatch[1];
+      const word = forMatch[2];
+      const wordClean = word.replace(/\s+/g, '_').toLowerCase();
+      const wordExact = word.replace(/\s+/g, '_');
+      
+      paths.push(`/audio/english/words/${wordClean}.mp3`);
+      paths.push(`/audio/english/words/${letter.toLowerCase()}_for_${wordClean}.mp3`);
+      paths.push(`/audio/english/words/${letter.toUpperCase()}_for_${wordExact}.mp3`);
+    } else {
+      const wordClean = cleanText.replace(/\s+/g, '_').toLowerCase();
+      paths.push(`/audio/english/words/${wordClean}.mp3`);
+      paths.push(`/audio/english/words/${cleanText.replace(/\s+/g, '_')}.mp3`);
+    }
+
+    // 3. English Numbers
+    const numItem = ENGLISH_NUMBERS.find(
+      item => item.word.toUpperCase() === cleanText.toUpperCase()
+    );
+    if (numItem) {
+      paths.push(`/audio/english/numbers/${numItem.number}.mp3`);
+      paths.push(`/audio/english/numbers/${numItem.word.toLowerCase().replace(/[^a-z0-9_]+/g, '_')}.mp3`);
+    } else if (/^\d+$/.test(cleanText)) {
+      paths.push(`/audio/english/numbers/${cleanText}.mp3`);
+    }
+  } else if (lang === 'gu') {
+    // 4. Gujarati Alphabet (or Letters)
+    const cleanPhonetic = englishPhoneticFallback?.trim() || '';
+    const guItem = GUJARATI_ALPHABET.find(item => {
+      return (
+        item.letter === cleanText ||
+        cleanText.startsWith(item.letter) ||
+        (cleanPhonetic && item.englishPhonetic.toLowerCase() === cleanPhonetic.toLowerCase()) ||
+        (cleanPhonetic && cleanPhonetic.toLowerCase().startsWith(item.englishPhonetic.toLowerCase()))
+      );
+    });
+
+    if (guItem) {
+      const phoneticClean = guItem.englishPhonetic.toLowerCase();
+      const wordClean = guItem.wordEnglish.toLowerCase().replace(/\s+/g, '_');
+      
+      paths.push(`/audio/gujarati/alphabet/${phoneticClean}.mp3`);
+      paths.push(`/audio/gujarati/alphabet/${guItem.letter}.mp3`);
+      paths.push(`/audio/gujarati/alphabet/${guItem.word}.mp3`);
+      paths.push(`/audio/gujarati/alphabet/${wordClean}.mp3`);
+      paths.push(`/audio/gujarati/alphabet/${phoneticClean}_for_${wordClean}.mp3`);
+    }
+
+    // 5. Gujarati Numbers
+    const guNumItem = GUJARATI_NUMBERS.find(item => {
+      return (
+        item.word === cleanText ||
+        (cleanPhonetic && item.englishPhonetic.toLowerCase() === cleanPhonetic.toLowerCase())
+      );
+    });
+
+    if (guNumItem) {
+      paths.push(`/audio/gujarati/numbers/${guNumItem.number}.mp3`);
+      paths.push(`/audio/gujarati/numbers/${guNumItem.word}.mp3`);
+      paths.push(`/audio/gujarati/numbers/${guNumItem.englishPhonetic.toLowerCase()}.mp3`);
+    } else if (/^\d+$/.test(cleanText)) {
+      paths.push(`/audio/gujarati/numbers/${cleanText}.mp3`);
+    }
+
+    // 6. Gujarati Barakhadi
+    paths.push(`/audio/gujarati/barakhadi/${cleanText}.mp3`);
+    if (cleanPhonetic) {
+      paths.push(`/audio/gujarati/barakhadi/${cleanPhonetic.toLowerCase()}.mp3`);
+    }
+  }
+
+  return Array.from(new Set(paths));
+}
 
 /**
  * Robust asynchronous loader for speech synthesis voices.
@@ -140,8 +267,9 @@ function findBestVoice(lang: 'en' | 'gu', voices: SpeechSynthesisVoice[]): Speec
 }
 
 /**
- * Speaks the requested text using the native browser SpeechSynthesis API.
- * Ensures no speech overlap, waits for voice loading, handles fallbacks, and stores pending calls for autoplay unlocking.
+ * Speaks the requested text using either a matching local MP3 audio file,
+ * or native browser SpeechSynthesis as a fallback.
+ * Ensures no overlap, stops prior playbacks, and supports offline-safe asset serving.
  */
 export async function speakText(
   text: string, 
@@ -149,22 +277,72 @@ export async function speakText(
   rate: number = 0.85, 
   englishPhoneticFallback?: string
 ) {
-  if (typeof window === 'undefined' || !window.speechSynthesis) {
-    console.warn('Speech synthesis not supported in this browser.');
+  if (typeof window === 'undefined') {
     return;
+  }
+
+  // Always stop any playing local MP3 audio
+  if (currentAudio) {
+    try {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    } catch (e) {
+      console.warn('Failed to pause current audio player:', e);
+    }
+    currentAudio = null;
+  }
+
+  // Always cancel any native speech queue to prevent overlap
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
   }
 
   // Update last requested speech context
   lastRequestedSpeech = { text, lang, rate, englishPhoneticFallback };
 
-  // Always cancel any current or queued speaking to prevent overlaps immediately
-  window.speechSynthesis.cancel();
+  // Resolve potential local MP3 audio paths
+  const possiblePaths = getPossibleAudioPaths(text, lang, englishPhoneticFallback);
 
-  // Wait for voices to be loaded
+  // Check which MP3 file exists first (sequentially, respecting priority)
+  let matchedPath: string | null = null;
+  for (const path of possiblePaths) {
+    const exists = await checkFileExists(path);
+    // If a newer speech request has been registered in the meantime, abort this stale thread immediately
+    if (lastRequestedSpeech?.text !== text) {
+      return;
+    }
+    if (exists) {
+      matchedPath = path;
+      break;
+    }
+  }
+
+  // If a local MP3 exists, play it!
+  if (matchedPath) {
+    try {
+      const audio = new Audio(matchedPath);
+      currentAudio = audio;
+      await audio.play();
+      return; // Played successfully!
+    } catch (err) {
+      console.warn(`Local MP3 found at ${matchedPath} but playback was blocked/failed:`, err);
+      if (lastRequestedSpeech?.text !== text) {
+        return;
+      }
+    }
+  }
+
+  // Only if MP3 does not exist (or failed to play), use standard SpeechSynthesis fallback
+  if (!window.speechSynthesis) {
+    console.warn('Speech synthesis not supported in this browser.');
+    return;
+  }
+
+  // Wait for voices to load
   const availableVoices = await ensureVoices();
 
   // If a new speech has been requested while waiting for voices to load, abort this stale call
-  if (lastRequestedSpeech.text !== text) {
+  if (lastRequestedSpeech?.text !== text) {
     return;
   }
 
@@ -179,7 +357,7 @@ export async function speakText(
       bestVoice.name.toLowerCase().includes('hindi')
     );
 
-    // If we've fallback to non-Gujarati/Hindi voices, use the phonetic English spelling for better sounding speech
+    // If fallback to non-Gujarati/Hindi voices, use phonetic English spelling
     if (!isGujaratiOrHindi && englishPhoneticFallback) {
       textToSpeak = englishPhoneticFallback;
     }
