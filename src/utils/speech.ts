@@ -459,36 +459,11 @@ export async function speakText(
     console.log(`[Audio System] Playback requested for local MP3. Resolved URL: ${resolvedUrl}`);
 
     try {
-      // 1. Fetch the file as a Blob to ensure we bypass Range header and OS media player session cookie issues.
-      // This also allows us to clearly capture HTTP error statuses (like 404, 401, 403, 500).
-      const response = await fetch(resolvedUrl);
-      
-      console.log(`[Audio System] HTTP status for ${resolvedUrl}: ${response.status} ${response.statusText}`);
-      
-      if (!response.ok) {
-        console.error(`[Audio System] Failed to load audio file over HTTP (Status ${response.status} ${response.statusText}). URL: ${resolvedUrl}`);
-        throw new Error(`HTTP_${response.status}_${response.statusText}`);
-      }
-
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-
-      console.log(`[Audio System] Blob loaded successfully for ${resolvedUrl}. Creating Audio element.`);
-
-      const audio = new Audio(blobUrl);
+      console.log(`[Audio System] Creating Audio element for URL: ${resolvedUrl}`);
+      const audio = new Audio(resolvedUrl);
       currentAudio = audio;
 
-      // Handle cleaning up the object URL after use
-      const cleanup = () => {
-        try {
-          URL.revokeObjectURL(blobUrl);
-        } catch (e) {}
-      };
-
-      audio.addEventListener('ended', cleanup);
-
       const playPromise = new Promise<void>((resolve, reject) => {
-        // Prepare events
         const onCanPlay = () => {
           audio.play()
             .then(() => {
@@ -496,14 +471,12 @@ export async function speakText(
               resolve();
             })
             .catch((err) => {
-              cleanup();
               console.error(`[Audio System] HTML5 Audio play() failed for URL ${resolvedUrl}:`, err);
               reject(err);
             });
         };
 
         const onError = (e: Event) => {
-          cleanup();
           const mediaError = audio.error;
           const errMsg = `HTML5 Audio Element error for URL ${resolvedUrl}: Code=${mediaError?.code || 'unknown'}, Message=${mediaError?.message || 'none'}`;
           console.error(`[Audio System] ${errMsg}`, e);
